@@ -14,7 +14,7 @@ const Header = ({links = [], backgroundColor = 'bg-blue', textColor = 'text-gray
             <nav className='mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8' aria-label="Main navigation">
                 <div className="flex">
                     <Link to="/" className="-m-1.5 p-1.5">
-                        <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Logo" className="h-8 w-auto" />
+                        <img src="src/assets/logo/logo-header.png" alt="Logo" className="h-8 w-auto" />
                     </Link>
                 </div>
 
@@ -25,12 +25,6 @@ const Header = ({links = [], backgroundColor = 'bg-blue', textColor = 'text-gray
                         </li>
                     ))}
                 </ul>
-
-                {/* <div className='flex items-center gap-20'>
-                    <Link to="#" className="text-sm/6 font-semibold text-gray-900">Features</Link>
-                    <Link to="#" className="text-sm/6 font-semibold text-gray-900">Marketplace</Link>
-                    <Link to="#" className="text-sm/6 font-semibold text-gray-900">Company</Link>
-                </div> */}
 
 {/* CAMBIAR POR LOGOS DE LAS REDES SOCIALES -------> */}
                 <div className="hidden lg:flex lg:justify-end">

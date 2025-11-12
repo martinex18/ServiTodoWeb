@@ -7,8 +7,8 @@ const RoleView = () => {
       <>
       <Header
         links = {[
-          {name: 'Features', to: '/'},
-          {name: 'Marketplace', to: '/'},
+          {name: 'Sobre nosotros', to: '/'},
+          {name: 'Contacto', to: '/'},
           {name: 'Company', to: '/'},
         ]}
         backgroundColor = 'bg-[#5f8d92]'
@@ -38,7 +38,7 @@ const RoleView = () => {
               </button>
             </Link>
 
-            <Link to='registerWorker'>
+            <Link to='register-worker'>
 
             <button className="flex flex-col items-center justify-center cursor-pointer bg-white border-2 border-[#5f8d92] text-[#5f8d92] font-semibold px-8 py-6 rounded-2xl shadow-md hover:bg-[#5f8d92] hover:text-white transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -51,7 +51,7 @@ const RoleView = () => {
           </div>
 
           {/* Iniciar sesión */}
-          <Link to='/'>
+          <Link to='/login'>
             <button className="flex flex-col items-center justify-center cursor-pointer bg-white border-2 border-[#5f8d92] text-[#5f8d92] font-semibold px-8 py-6 rounded-2xl shadow-md hover:bg-[#5f8d92] hover:text-white transition-all duration-300">
                 <span className="font-bold">Iniciar sesión</span>
             </button>

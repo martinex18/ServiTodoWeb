@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "../../../components/header/header";
 import { registerWorker } from "../../../services/worker/registerWorker";
 
@@ -16,24 +16,25 @@ const RegisterWorkerView = () => {
         confirmPassword: '',
     })
 
-    // const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  let navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     if (form.password !== form.confirmPassword) {
       setError("Las contraseñas no coinciden.");
       return;
     }
 
-    // setLoading(true);
     const response = await registerWorker(form);
-    // setLoading(false);
+    setLoading(false);
 
     if (response.success) {
-      alert("✅ Registro exitoso");
+      alert("Registro exitoso");
       setForm({
         name: "",
         id_number: "",
@@ -44,6 +45,7 @@ const RegisterWorkerView = () => {
         password: "",
         confirmPassword: "",
       });
+      navigate('/home-worker');
     } else {
       setError(response.message);
     }
@@ -53,8 +55,8 @@ const RegisterWorkerView = () => {
         <>
             <Header
                 links = {[
-                {name: 'Features', to: '/'},
-                {name: 'Marketplace', to: '/'},
+                {name: 'Sobre nosotros', to: '/'},
+                {name: 'Contacto', to: '/'},
                 {name: 'Company', to: '/'},
                 ]}
                 backgroundColor = 'bg-[#5f8d92]'
@@ -69,7 +71,7 @@ const RegisterWorkerView = () => {
                 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="mb-6">
-                            <label className="block text-gray-700 text-sm font-medium mb-1">Nombre completo o del negocio</label>
+                            <label className="block text-gray-700 text-sm font-medium mb-1">Nombre completo / Negocio</label>
                             <input type="text" placeholder="Juan Carlos o Barberia" name="Nombre" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5f8d92] placeholder:text-gray-400 font-sans" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})}/>
                         </div>
 
@@ -112,10 +114,17 @@ const RegisterWorkerView = () => {
                         </div>
 
                         <div className="mb-4">
-                            <Link to='/homeWorker'>
-                                <button type="submit" className="mt-6 w-full bg-[#5f8d92] text-white font-semibold p-3 rounded-lg hover:bg-[#4a6f73] transition-colors">Registrarse</button>
-                            </Link>
+                                <button type="submit" disabled={loading} className="mt-6 w-full bg-[#5f8d92] text-white font-semibold p-3 rounded-lg hover:bg-[#4a6f73] transition-colors">
+                                    {loading ? 
+                                        (<div className="flex items-center justify-center">
+                                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor"d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                                        </svg>
+                                        </div>) : "Registrar"}
+                                </button>
                         </div>
+                        {error && <p style={{ color: "red" }}>{error}</p>}
                     </form>
                 </div>
             </div>

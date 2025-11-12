@@ -3,7 +3,7 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { app } from "../../firebaseConfig";
 
-const auth = getAuth(app);
+const firebaseAuth = getAuth(app);
 const db = getFirestore(app);
 
 /**
@@ -15,7 +15,7 @@ export const registerWorker = async (form) => {
   try {
     // Crear usuario con correo y contraseña
     const userCredential = await createUserWithEmailAndPassword(
-      auth,
+      firebaseAuth,
       form.email,
       form.password
     );
