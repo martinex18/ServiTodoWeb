@@ -1,11 +1,11 @@
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
-import { app } from "../../firebaseConfig";
+import { app } from "../firebaseConfig";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 
 const firebaseAuth = getAuth(app);
 const db = getFirestore(app);
 
-export const loginWorker = async (email, password) => {
+export const login = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(
       firebaseAuth,
@@ -14,19 +14,28 @@ export const loginWorker = async (email, password) => {
     );
     const user = userCredential.user;
 
-    // Buscar los datos del worker en Firestore
-    const docRef = doc(db, "worker", user.uid);
-    const docSnap = await getDoc(docRef);
+    // Busca los datos del worker en Firestore
+    const workerRef = doc(db, "worker", user.uid);
+    const workerSnap = await getDoc(workerRef);
 
-    if (docSnap.exists()) {
-      const workerData = docSnap.data();
+    if (workerSnap.exists()) {
+      const workerData = workerSnap.data();
       return { success: true, user: { uid: user.uid, ...workerData } };
-    } else {
-      return {
-        success: false,
-        message: "No se encontró información del trabajador.",
-      };
     }
+
+    // Busca los datos del customer en Firestore
+    const customerRef = doc(db, "client", user.uid);
+    const customerSnap = await getDoc(customerRef);
+
+    if (customerSnap.exists()) {
+      const customerData = customerSnap.data();
+      return { success: true, user: { uid: user.uid, ...customerData } };
+    }
+
+    return {
+      success: false,
+      message: "No se encontró el usuario",
+    };
   } catch (error) {
     console.log("error al iniciar: ", error);
     let message = "errro al iniciar: ";

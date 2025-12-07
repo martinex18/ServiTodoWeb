@@ -29,7 +29,7 @@ const RoleView = () => {
           <div className="flex items-center justify-center gap-6">
 
             {/* Registrarse */}
-            <Link to='/'>
+            <Link to='/register-customer'>
               <button className="flex flex-col items-center justify-center cursor-pointer bg-white border-2 border-[#5f8d92] text-[#5f8d92] font-semibold px-8 py-6 rounded-2xl shadow-md hover:bg-[#5f8d92] hover:text-white transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A3 3 0 017 17h10a3 3 0 011.879.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />

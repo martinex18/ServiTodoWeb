@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { loginWorker } from "../../services/worker/loginWorker";
 import Header from "../../components/header/header";
+import { login } from "../../services/login";
 
 const LoginView = () => {
   const [form, setForm] = useState({
@@ -19,7 +19,7 @@ const LoginView = () => {
     setError("");
     setLoading(true);
 
-    const response = await loginWorker(form.email, form.password);
+    const response = await login(form.email, form.password);
     setLoading(false);
     if (response.success) {
 
@@ -124,7 +124,7 @@ const LoginView = () => {
             </p>
 
             <div className="flex items-center justify-center gap-6">
-              <Link to="/register-client">
+              <Link to="/register-customer">
                 <button className="flex flex-col items-center justify-center bg-white border-2 border-[#5f8d92] text-[#5f8d92] font-semibold px-6 py-4 rounded-2xl shadow-md hover:bg-[#5f8d92] hover:text-white transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

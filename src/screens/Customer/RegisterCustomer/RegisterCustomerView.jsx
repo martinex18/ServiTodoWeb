@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../../components/header/header";
-import { registerWorker } from "../../../services/worker/registerWorker";
+import { registerCustomer } from "../../../services/customer/registerCustomer";
 
-const RegisterWorkerView = () => {
+const RegisterCustomerView = () => {
 
     const [form, setForm] = useState({
         name: '',
         id_number: '',
         phone: '',
         city: '',
-        job: '',
         email: '',
         password: '',
         confirmPassword: '',
@@ -30,7 +29,7 @@ const RegisterWorkerView = () => {
       return;
     }
 
-    const response = await registerWorker(form);
+    const response = await registerCustomer(form);
     setLoading(false);
 
     if (response.success) {
@@ -40,7 +39,6 @@ const RegisterWorkerView = () => {
         id_number: "",
         phone: "",
         city: "",
-        job: "",
         email: "",
         password: "",
         confirmPassword: "",
@@ -66,13 +64,13 @@ const RegisterWorkerView = () => {
 
             <div className="flex flex-col items-center justify-center min-h-screen bg-contain bg-center bg-white gap-6 pt-28 pb-16 px-4" style={{ backgroundImage: "url(src/assets/imgbackground/backgroundExt.png)"}}>
                 <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-xl backdrop-blur-sm">
-                    <h2 className="text-2xl font-bold text-center mb-2 text-gray-800">Unete como prestador de servicios</h2>
-                    <p className="font-sans text-center mb-6 text-gray-600">Conectate con miles de clientes en tu ciudad</p>
+                    <h2 className="text-2xl font-bold text-center mb-2 text-gray-800">Crea tu cuenta</h2>
+                    <p className="font-sans text-center mb-6 text-gray-600">Encuentra los mejores servicios cerca de ti</p>
                 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="mb-6">
-                            <label className="block text-gray-700 text-sm font-medium mb-1">Nombre completo / Negocio</label>
-                            <input type="text" placeholder="Juan Carlos o Barberia" name="Nombre" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5f8d92] placeholder:text-gray-400 font-sans" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})}/>
+                            <label className="block text-gray-700 text-sm font-medium mb-1">Nombre completo</label>
+                            <input type="text" placeholder="Juan Carlos" name="Nombre" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5f8d92] placeholder:text-gray-400 font-sans" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})}/>
                         </div>
 
                         <div className="mb-6">
@@ -91,11 +89,6 @@ const RegisterWorkerView = () => {
                                 <label className="block text-gray-700 text-sm font-medium mb-1">Ciudad</label>
                                 <input type="text" placeholder="Ingresa la ciudad" name="ciudad" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5f8d92] placeholder:text-gray-400 font-sans" value={form.city} onChange={(e) => setForm({...form, city: e.target.value})}/>
                             </div>
-                        </div>
-
-                        <div className="mb-6">
-                            <label className="block text-gray-700 text-sm font-medium mb-1">Tipo de servicio</label>
-                            <input type="text" placeholder="Seleccione el tipo de servicio" name="servicio" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5f8d92] placeholder:text-gray-400 font-sans" value={form.job} onChange={(e) => setForm({...form, job: e.target.value})}/>
                         </div>
 
                         <div className="mb-6">
@@ -132,4 +125,4 @@ const RegisterWorkerView = () => {
     );
 }
 
-export default RegisterWorkerView;
+export default RegisterCustomerView;
