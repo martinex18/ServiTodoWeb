@@ -8,7 +8,7 @@ const db = getFirestore(app);
 
 /**
  * Registra un nuevo trabajador.
- * @param {Object} data - Datos del formulario
+ * @param {Object} form - Datos del formulario
  */
 
 export const registerWorker = async (form) => {

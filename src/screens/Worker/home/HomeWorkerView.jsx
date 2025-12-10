@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { EditIcon, User2Icon, Plus } from 'lucide-react';
 
 import Header from "../../../components/header/header";
+import AddServicesModal from "../../../components/modal/addServicesModal";
 
 
 const HomeWorkerView = () => {
@@ -15,6 +16,8 @@ const HomeWorkerView = () => {
         setUser(JSON.parse(infoUser));
       }
     }, [])
+
+    const [openModal, setOpenModal] = useState(false);
     
     return(
         <>
@@ -58,7 +61,7 @@ const HomeWorkerView = () => {
                             </div>
                             ))}
                         </div>
-                        <button className="mt-5 w-md bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+                        <button className="mt-5 w-md bg-[#5f8d92] text-white py-2 rounded-lg hover:bg-[#4a6f73]">
                             Ver Todas las Solicitudes
                         </button>
                     </div>
@@ -68,12 +71,14 @@ const HomeWorkerView = () => {
                             <div className="space-y-3">
                                 <button className="w-full flex items-center gap-2 bg-gray-100 p-2 rounded-lg text-left hover:bg-gray-200"> <User2Icon size={27}/> Editar mi perfil </button>
                                 <button className="w-full flex items-center gap-2 bg-gray-100 p-2 rounded-lg text-left hover:bg-gray-200"> <EditIcon size={27} /> Gestionar mis servicios </button>
-                                <button className="w-full flex items-center gap-2 bg-gray-100 p-2 rounded-lg text-left hover:bg-gray-200"><Plus size={27}/> Ofrecer un servicio </button>
+                                <button className="w-full flex items-center gap-2 bg-gray-100 p-2 rounded-lg text-left hover:bg-gray-200" onClick={() => setOpenModal(true)}><Plus size={27}/> Ofrecer un servicio </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <AddServicesModal open={openModal} onClose={() => setOpenModal(false)} />
         </>
     )
 }
