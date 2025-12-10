@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { EditIcon, User2Icon, Plus } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+import { useAuth } from '../../../context/AuthContext'
 
 import Header from "../../../components/header/header";
 import AddServicesModal from "../../../components/modal/addServicesModal";
+
 
 
 const HomeWorkerView = () => {
@@ -18,6 +21,14 @@ const HomeWorkerView = () => {
     }, [])
 
     const [openModal, setOpenModal] = useState(false);
+
+    const { logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        await logout();
+        navigate('/login');
+    }
     
     return(
         <>
@@ -30,6 +41,11 @@ const HomeWorkerView = () => {
                 backgroundColor = 'bg-[#5f8d92]'
                 textColor = 'text-white'
                 position = 'fixed'
+                rightContent={
+                    <button onClick={handleLogout} className="text-white text-sm font-semibold hover:opacity-70 transition-opacity hover:cursor-pointer">
+                        Cerrar sesion <span aria-hidden="true">&rarr;</span>
+                    </button>
+                }
             />
 
             <div className="min-h-screen bg-contain bg-center bg-gray-50 pt-28 pb-16 px-10">
