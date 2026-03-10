@@ -10,7 +10,7 @@ export const login = async (email, password) => {
     const userCredential = await signInWithEmailAndPassword(
       firebaseAuth,
       email,
-      password
+      password,
     );
     const user = userCredential.user;
 
@@ -20,7 +20,11 @@ export const login = async (email, password) => {
 
     if (workerSnap.exists()) {
       const workerData = workerSnap.data();
-      return { success: true, user: { uid: user.uid, ...workerData } };
+      return {
+        success: true,
+        role: "worker",
+        user: { uid: user.uid, ...workerData },
+      };
     }
 
     // Busca los datos del customer en Firestore
@@ -29,7 +33,11 @@ export const login = async (email, password) => {
 
     if (customerSnap.exists()) {
       const customerData = customerSnap.data();
-      return { success: true, user: { uid: user.uid, ...customerData } };
+      return {
+        success: true,
+        role: "client",
+        user: { uid: user.uid, ...customerData },
+      };
     }
 
     return {

@@ -21,17 +21,16 @@ const LoginView = () => {
 
     const response = await login(form.email, form.password);
     setLoading(false);
+
     if (response.success) {
+      setForm({ email: "", password: "",});
 
-      // Guarda la información del usuario en localStorage
-      localStorage.setItem("user", JSON.stringify(response.user));
+      if (response.role === "worker"){
+        navigate('/home-worker');
+      }else{
+        navigate('/home-customer');
+      }
 
-      setForm({
-        email: "",
-        password: "",
-      });
-
-      navigate('/home-worker');
     } else {
       setError(response.message);
     }

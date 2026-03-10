@@ -17,7 +17,7 @@ export const registerCustomer = async (form) => {
     const userCredential = await createUserWithEmailAndPassword(
       firebaseAuth,
       form.email,
-      form.password
+      form.password,
     );
 
     const user = userCredential.user;
@@ -29,6 +29,8 @@ export const registerCustomer = async (form) => {
       phone: form.phone,
       city: form.city,
       email: form.email,
+      role: "client",
+      createdAt: new Date(),
     });
 
     return { success: true };

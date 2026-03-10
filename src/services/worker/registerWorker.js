@@ -17,7 +17,7 @@ export const registerWorker = async (form) => {
     const userCredential = await createUserWithEmailAndPassword(
       firebaseAuth,
       form.email,
-      form.password
+      form.password,
     );
 
     const user = userCredential.user;
@@ -30,6 +30,7 @@ export const registerWorker = async (form) => {
       city: form.city,
       job: form.job,
       email: form.email,
+      role: "worker",
       createdAt: new Date(),
     });
 
