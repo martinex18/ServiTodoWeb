@@ -85,7 +85,6 @@ const HomeWorkerView = () => {
                         <div className="bg-white rounded-2xl shadow p-6">
                             <h3 className="font-semibold mb-4">Acciones Rápidas</h3>
                             <div className="space-y-3">
-                                <button className="w-full flex items-center gap-2 bg-gray-100 p-2 rounded-lg text-left hover:bg-gray-200"> <User2Icon size={27}/> Editar mi perfil </button>
                                 <button className="w-full flex items-center gap-2 bg-gray-100 p-2 rounded-lg text-left hover:bg-gray-200"> <EditIcon size={27} /> Gestionar mis servicios </button>
                                 <button className="w-full flex items-center gap-2 bg-gray-100 p-2 rounded-lg text-left hover:bg-gray-200" onClick={() => setOpenModal(true)}><Plus size={27}/> Ofrecer un servicio </button>
                             </div>
