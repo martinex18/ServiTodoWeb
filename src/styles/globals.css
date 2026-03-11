@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap');
+@import "tailwindcss";
+
+/* ================================
+   THEME
+   Todo lo que definas aquí genera
+   clases automáticamente:
+   --color-primary → bg-primary, text-primary, border-primary
+   --font-sans     → font-sans
+================================ */
+@theme {
+  /* Fuentes */
+  --font-sans: 'Inter', sans-serif;
+  --font-heading: 'Poppins', sans-serif;
+
+  /* Colores principales */
+  --color-primary: #5f8d92;
+  --color-primary-dark: #4a6f73;
+  --color-primary-light: #e8f4f5;
+
+  /* Colores base */
+  --color-background: #ffffff;
+  --color-foreground: #1f2937;
+
+  /* Textos */
+  --color-muted: #6b7280;
+  --color-muted-light: #9ca3af;
+
+  /* Bordes */
+  --color-border: #e5e7eb;
+
+  /* Estados */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+
+  /* Border radius */
+  --radius: 0.75rem;
+  --radius-sm: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+}
+
+/* ================================
+   4. BASE — estilos globales
+================================ */
+@layer base {
+  * {
+    box-sizing: border-box;
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+
+  /* Elimina el outline por defecto y usa el color primario */
+  *:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+/* ================================
+   UTILIDADES PROPIAS
+   Clases que puedes usar en cualquier
+   componente con className=""
+================================ */
+@layer utilities {
+  /* Ocultar scrollbar manteniendo el scroll */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Gradiente del color primario */
+  .bg-primary-gradient {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  }
+
+  /* Sombra con color primario */
+  .shadow-primary {
+    box-shadow: 0 4px 14px rgba(95, 141, 146, 0.3);
+  }
+}
