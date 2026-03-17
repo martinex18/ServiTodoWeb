@@ -5,24 +5,27 @@ import { useAuth } from '../../../context/AuthContext'
 
 import Header from "../../../components/header/header";
 import AddServicesModal from "../../../components/modal/addServicesModal";
+import { getWorkerServices } from "@/services/worker/getWorkerServices";
 
 
 
 const HomeWorkerView = () => {
-
-    const [user, setUser] = useState(null);
+    
+    const { user, logout } = useAuth();
+    const [services, setServices] = useState([]);
+    const [loadingServices, setLoadingServices] = useState(true);
 
     useEffect(() => {
-    // Se obtiene el usuario del localStorage
-      const infoUser = localStorage.getItem('user');
-      if(infoUser){
-        setUser(JSON.parse(infoUser));
-      }
-    }, [])
+        const fetchData = async () => {
+            const response = await getWorkerServices(user.uid);
+            if(response.success) setServices(response.services);
+            setLoadingServices(false);
+        }
+        fetchData();
+    }, [user.uid]);
 
     const [openModal, setOpenModal] = useState(false);
 
-    const { logout } = useAuth();
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -38,7 +41,7 @@ const HomeWorkerView = () => {
                 {name: 'Reservas', to: '/'},
                 {name: 'Mis servicios', to: '/'},
                 ]}
-                backgroundColor = 'bg-[#5f8d92]'
+                backgroundColor = 'bg-primary'
                 textColor = 'text-white'
                 position = 'fixed'
                 rightContent={
@@ -58,24 +61,28 @@ const HomeWorkerView = () => {
                     <div className="col-span-2 bg-white rounded-2xl shadow p-6">
                         <h2 className="text-lg font-semibold mb-4">Solicitudes de servicios</h2>
                         <div className="space-y-3">
-                            {[
-                            { servicio: "Plomería General", cliente: "Carlos Gómez", horas: 2 },
-                            { servicio: "Limpieza de Hogar", cliente: "Ana Pérez", horas: 5 },
-                            ].map((item, i) => (
-                            <div key={i} className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
-                                <div>
-                                    <p className="font-medium text-gray-800">
-                                        {item.servicio} - {item.cliente}
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                        Recibida: hace {item.horas} horas
-                                    </p>
+                            {loadingServices ? (
+                                <p className="text-muted">Cargando...</p>
+                            ): services.length === 0 ? (
+                                <p className="text-muted">No tienes servicios publicados</p>
+                            ) : (
+                                services.map((serv) => (
+                                <div key={serv.id} className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                                    <div>
+                                        <p className="font-medium text-foreground">
+                                            {serv.name} - {serv.category}
+                                        </p>
+                                        <p className="text-sm text-muted">
+                                            ${serv.price} · {serv.type}
+                                        </p>
+                                    </div>
+                                    <button className="text-blue-600 text-sm font-medium hover:underline">
+                                        Ver detalles
+                                    </button>
                                 </div>
-                                <button className="text-blue-600 text-sm font-medium hover:underline">
-                                Ver Detalles
-                                </button>
-                            </div>
-                            ))}
+                                ))
+                            )
+                            }
                         </div>
                         <button className="mt-5 w-md bg-primary text-white py-2 rounded-lg hover:bg-primaryS">
                             Ver Todas las Solicitudes
