@@ -17,7 +17,7 @@ const WorkerCard = ({ name, service, rating, reviews, city, tag }) => (
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Avatar>
-            <AvatarFallback className="bg-[#5f8d92] text-white font-bold">
+            <AvatarFallback className="bg-primary text-white font-bold">
               {name.charAt(0)}
             </AvatarFallback>
           </Avatar>
@@ -29,7 +29,7 @@ const WorkerCard = ({ name, service, rating, reviews, city, tag }) => (
         <Badge
           className={tag === "Popular"
             ? "bg-orange-100 text-orange-600 hover:bg-orange-100"
-            : "bg-[#e8f4f5] text-[#5f8d92] hover:bg-[#e8f4f5]"
+            : "bg-primary-light text-primary hover:bg-primary-light"
           }
         >
           {tag}
@@ -46,7 +46,7 @@ const WorkerCard = ({ name, service, rating, reviews, city, tag }) => (
         </span>
       </div>
 
-      <Button className="w-full bg-[#5f8d92] hover:bg-[#4a6f73] text-white">
+      <Button className="w-full bg-primary hover:bg-primary text-white">
         Ver perfil
       </Button>
     </CardContent>
@@ -96,7 +96,7 @@ const HomeCustomerView = () => {
           { name: "Mis solicitudes", to: "/" },
           { name: "Historial", to: "/" },
         ]}
-        backgroundColor="bg-[#5f8d92]"
+        backgroundColor="bg-primary"
         textColor="text-white"
         position="fixed"
         rightContent={
@@ -124,7 +124,7 @@ const HomeCustomerView = () => {
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 z-10" size={20} />
           <Input
             placeholder="Buscar servicio o prestador..."
-            className="pl-12 py-6 rounded-xl shadow-sm border-gray-200 focus-visible:ring-[#5f8d92]"
+            className="pl-12 py-6 rounded-xl shadow-sm border-gray-200 focus-visible:ring-primary"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -140,8 +140,8 @@ const HomeCustomerView = () => {
                 onClick={() => setSelectedCategory(selectedCategory === cat.name ? null : cat.name)}
                 className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all
                   ${selectedCategory === cat.name
-                    ? "border-[#5f8d92] bg-[#5f8d92] text-white"
-                    : "border-gray-200 bg-white text-gray-700 hover:border-[#5f8d92]"
+                    ? "border-primary bg-primary text-white"
+                    : "border-gray-200 bg-white text-gray-700 hover:border-primary"
                   }`}
               >
                 <span className="text-xs font-medium">{cat.name}</span>
@@ -153,7 +153,7 @@ const HomeCustomerView = () => {
         {/* Destacados */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4">
-            <Star size={20} className="text-[#5f8d92]" />
+            <Star size={20} className="text-primary" />
             <h2 className="text-lg font-semibold text-gray-800">Destacados</h2>
           </div>
           { loadingWorkers ? (
@@ -172,7 +172,7 @@ const HomeCustomerView = () => {
         {/* Más solicitados */}
         <div>
             <div className="flex items-center gap-2 mb-4">
-                <TrendingUp size={20} className="text-[#5f8d92]" />
+                <TrendingUp size={20} className="text-primary" />
                 <h2 className="text-lg font-semibold text-gray-800">Más solicitados</h2>
             </div>
             {loadingWorkers ? (

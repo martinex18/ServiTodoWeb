@@ -57,7 +57,7 @@ const RegisterCustomerView = () => {
                 {name: 'Contacto', to: '/'},
                 {name: 'Company', to: '/'},
                 ]}
-                backgroundColor = 'bg-[#5f8d92]'
+                backgroundColor = 'bg-primary'
                 textColor = 'text-white'
                 position = 'fixed'
             />
@@ -70,44 +70,44 @@ const RegisterCustomerView = () => {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="mb-6">
                             <label className="block text-gray-700 text-sm font-medium mb-1">Nombre completo</label>
-                            <input type="text" placeholder="Juan Carlos" name="Nombre" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5f8d92] placeholder:text-gray-400 font-sans" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})}/>
+                            <input type="text" placeholder="Juan Carlos" name="Nombre" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-400 font-sans" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})}/>
                         </div>
 
                         <div className="mb-6">
                             <label className="">Numero de identificacion</label>
-                            <input type="number" placeholder="1234567" name="identificacion" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5f8d92] placeholder:text-gray-400 font-sans" value={form.id_number} onChange={(e) => setForm({...form, id_number: e.target.value})}/>
+                            <input type="number" placeholder="1234567" name="identificacion" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-400 font-sans" value={form.id_number} onChange={(e) => setForm({...form, id_number: e.target.value})}/>
                         </div>
                         
 
                         <div className="flex items-center justify-between mb-6">
                             <div>
                                 <label className="block text-gray-700 text-sm font-medium mb-1">Numero de telefono</label>
-                                <input type="number" placeholder="+57 300 000 0000" name="telefono" className="w-[280px] p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5f8d92] placeholder:text-gray-400 font-sans" value={form.phone} onChange={(e) => setForm({...form, phone: e.target.value})}/>
+                                <input type="number" placeholder="+57 300 000 0000" name="telefono" className="w-[280px] p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-400 font-sans" value={form.phone} onChange={(e) => setForm({...form, phone: e.target.value})}/>
                             </div>
 
                             <div>
                                 <label className="block text-gray-700 text-sm font-medium mb-1">Ciudad</label>
-                                <input type="text" placeholder="Ingresa la ciudad" name="ciudad" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5f8d92] placeholder:text-gray-400 font-sans" value={form.city} onChange={(e) => setForm({...form, city: e.target.value})}/>
+                                <input type="text" placeholder="Ingresa la ciudad" name="ciudad" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-400 font-sans" value={form.city} onChange={(e) => setForm({...form, city: e.target.value})}/>
                             </div>
                         </div>
 
                         <div className="mb-6">
                             <label className="block text-gray-700 text-sm font-medium mb-1">Correo electronico</label>
-                            <input type="email" placeholder="juancarlos@servitodo.com" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5f8d92] placeholder:text-gray-400 font-sans" value={form.email} onChange={(e) => setForm({...form, email: e.target.value})}/>
+                            <input type="email" placeholder="juancarlos@servitodo.com" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-400 font-sans" value={form.email} onChange={(e) => setForm({...form, email: e.target.value})}/>
                         </div>
 
                         <div className="mb-6">
                             <label className="block text-gray-700 text-sm font-medium mb-1">Contraseña</label>
-                            <input type="password" placeholder="**********" name="contrasena" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5f8d92] placeholder:text-gray-400 font-sans" value={form.password} onChange={(e) => setForm({...form, password: e.target.value})}/>
+                            <input type="password" placeholder="**********" name="contrasena" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-400 font-sans" value={form.password} onChange={(e) => setForm({...form, password: e.target.value})}/>
                         </div>
 
                         <div className="mb-6">
                             <label className="block text-gray-700 text-sm font-medium mb-1">Confirmar contraseña</label>
-                            <input type="password" placeholder="**********" name="Confirmar_contrasena" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5f8d92] placeholder:text-gray-400 font-sans" value={form.confirmPassword} onChange={(e) => setForm({...form, confirmPassword: e.target.value})} />
+                            <input type="password" placeholder="**********" name="Confirmar_contrasena" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-400 font-sans" value={form.confirmPassword} onChange={(e) => setForm({...form, confirmPassword: e.target.value})} />
                         </div>
 
                         <div className="mb-4">
-                                <button type="submit" disabled={loading} className="mt-6 w-full bg-[#5f8d92] text-white font-semibold p-3 rounded-lg hover:bg-[#4a6f73] transition-colors">
+                                <button type="submit" disabled={loading} className="mt-6 w-full bg-primary text-white font-semibold p-3 rounded-lg hover:bg-primary-dark transition-colors">
                                     {loading ? 
                                         (<div className="flex items-center justify-center">
                                         <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

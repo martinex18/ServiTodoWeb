@@ -44,7 +44,7 @@ const LoginView = () => {
           { name: "Marketplace", to: "/" },
           { name: "Company", to: "/" },
         ]}
-        backgroundColor="bg-[#5f8d92]"
+        backgroundColor="bg-primary"
         textColor="text-white"
         position="fixed"
       />
@@ -71,7 +71,7 @@ const LoginView = () => {
               <input
                 type="text"
                 placeholder="usuario@correo.com"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5f8d92] placeholder:text-gray-400 font-sans"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-400 font-sans"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
@@ -84,7 +84,7 @@ const LoginView = () => {
               <input
                 type="password"
                 placeholder="**********"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5f8d92] placeholder:text-gray-400 font-sans"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-400 font-sans"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
               />
@@ -93,7 +93,7 @@ const LoginView = () => {
             <div className="text-right">
               <Link
                 to="/forgot-password"
-                className="text-sm text-[#5f8d92] hover:text-[#4a6f73] font-medium"
+                className="text-sm text-primary hover:text-primary font-medium"
               >
                 ¿Olvidaste tu contraseña?
               </Link>
@@ -102,7 +102,7 @@ const LoginView = () => {
             <div className="mb-4">
                 <button
                   type="submit" disabled={loading}
-                  className="mt-2 w-full bg-[#5f8d92] text-white font-semibold p-3 rounded-lg hover:bg-[#4a6f73] transition-colors"
+                  className="mt-2 w-full bg-primary text-white font-semibold p-3 rounded-lg hover:bg-primary transition-colors"
                 >
                   {loading ? 
                     (<div className="flex items-center justify-center">
@@ -124,7 +124,7 @@ const LoginView = () => {
 
             <div className="flex items-center justify-center gap-6">
               <Link to="/register-customer">
-                <button className="flex flex-col items-center justify-center bg-white border-2 border-[#5f8d92] text-[#5f8d92] font-semibold px-6 py-4 rounded-2xl shadow-md hover:bg-[#5f8d92] hover:text-white transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
+                <button className="flex flex-col items-center justify-center bg-white border-2 border-primary text-primary font-semibold px-6 py-4 rounded-2xl shadow-md hover:bg-primary hover:text-white transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="w-8 h-8 mb-2"
@@ -144,7 +144,7 @@ const LoginView = () => {
               </Link>
 
               <Link to="/register-worker">
-                <button className="flex flex-col items-center justify-center bg-white border-2 border-[#5f8d92] text-[#5f8d92] font-semibold px-6 py-4 rounded-2xl shadow-md hover:bg-[#5f8d92] hover:text-white transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
+                <button className="flex flex-col items-center justify-center bg-white border-2 border-primary text-primary font-semibold px-6 py-4 rounded-2xl shadow-md hover:bg-primary hover:text-white transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="w-8 h-8 mb-2"
