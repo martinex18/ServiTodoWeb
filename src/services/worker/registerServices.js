@@ -5,11 +5,6 @@ import { app } from "../../firebaseConfig";
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/**
- * Registra un nuevo trabajador.
- * @param {Object} form - Datos del formulario
- */
-
 export const registerServices = async (form) => {
   try {
     const user = auth.currentUser;
@@ -22,8 +17,9 @@ export const registerServices = async (form) => {
       name: form.name,
       category: form.category,
       description: form.description,
-      type_rate: form.type_rate,
-      range_prices: form.range_prices,
+      type: form.type,
+      price: form.price,
+      available: true,
       created_at: new Date(),
     });
 
