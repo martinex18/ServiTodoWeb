@@ -5,35 +5,30 @@ import { getCategories } from "../../../services/getCategories";
 import { Search, Star, MapPin, TrendingUp } from "lucide-react";
 import { useAuth } from "../../../context/AuthContext";
 import Header from "../../../components/header/header";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const WorkerCard = ({ name, service, rating, reviews, city, tag }) => (
-  <Card className="hover:shadow-md transition-shadow">
-    <CardContent className="p-4 flex flex-col gap-3">
+  <div className="hover:shadow-md transition-shadow">
+    <div className="p-4 flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Avatar>
-            <AvatarFallback className="bg-primary text-white font-bold">
+          <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-lg text-gray-600">
+            <div className="bg-primary text-white font-bold">
               {name.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
+            </div>
+          </div>
           <div>
             <p className="font-semibold text-gray-800">{name}</p>
             <p className="text-sm text-gray-500">{service}</p>
           </div>
         </div>
-        <Badge
+        <span
           className={tag === "Popular"
             ? "bg-orange-100 text-orange-600 hover:bg-orange-100"
             : "bg-primary-light text-primary hover:bg-primary-light"
           }
         >
           {tag}
-        </Badge>
+        </span>
       </div>
 
       <div className="flex items-center justify-between text-sm text-gray-500">
@@ -46,11 +41,11 @@ const WorkerCard = ({ name, service, rating, reviews, city, tag }) => (
         </span>
       </div>
 
-      <Button className="w-full bg-primary hover:bg-primary text-white">
+      <button className="w-full bg-primary hover:bg-primary text-white">
         Ver perfil
-      </Button>
-    </CardContent>
-  </Card>
+      </button>
+    </div>
+  </div>
 );
 
 const HomeCustomerView = () => {
@@ -122,7 +117,7 @@ const HomeCustomerView = () => {
         {/* Buscador */}
         <div className="relative mb-8">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 z-10" size={20} />
-          <Input
+          <input
             placeholder="Buscar servicio o prestador..."
             className="pl-12 py-6 rounded-xl shadow-sm border-gray-200 focus-visible:ring-primary"
             value={search}
