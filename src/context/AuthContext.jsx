@@ -1,10 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import { app } from '../firebaseConfig';
-
-const auth = getAuth(app);
-const db = getFirestore(app);
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from "../firebaseConfig";
 
 const AuthContext = createContext();
 
@@ -12,7 +9,7 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [role, setRole] = useState(null); // 👈 nuevo
+    const [role, setRole] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

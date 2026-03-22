@@ -1,7 +1,5 @@
-import { getFirestore, collection, getDocs } from "firebase/firestore";
-import { app } from "../../firebaseConfig";
-
-const db = getFirestore(app);
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../firebaseConfig";
 
 export const getWorkers = async () => {
   try {

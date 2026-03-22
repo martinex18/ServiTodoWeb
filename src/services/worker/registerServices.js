@@ -1,9 +1,5 @@
-import { getFirestore, addDoc, collection } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import { app } from "../../firebaseConfig";
-
-const auth = getAuth(app);
-const db = getFirestore(app);
+import { addDoc, collection } from "firebase/firestore";
+import { auth, db } from "../../firebaseConfig";
 
 export const registerServices = async (form) => {
   try {

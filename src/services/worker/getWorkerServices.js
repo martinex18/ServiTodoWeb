@@ -1,13 +1,5 @@
-import { app } from "@/firebaseConfig";
-import {
-  collection,
-  getDocs,
-  getFirestore,
-  query,
-  where,
-} from "firebase/firestore";
-
-const db = getFirestore(app);
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../firebaseConfig";
 
 export const getWorkerServices = async (uid) => {
   try {

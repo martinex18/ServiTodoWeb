@@ -1,10 +1,7 @@
 // src/services/worker/registerWorker.js
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
-import { app } from "../../firebaseConfig";
-
-const firebaseAuth = getAuth(app);
-const db = getFirestore(app);
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../../firebaseConfig";
 
 /**
  * Registra un nuevo trabajador.
@@ -15,7 +12,7 @@ export const registerWorker = async (form) => {
   try {
     // Crear usuario con correo y contraseña
     const userCredential = await createUserWithEmailAndPassword(
-      firebaseAuth,
+      auth,
       form.email,
       form.password,
     );
