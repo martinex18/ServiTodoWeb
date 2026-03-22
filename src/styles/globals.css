@@ -4,9 +4,7 @@
 /* ================================
    THEME
    Todo lo que definas aquí genera
-   clases automáticamente:
-   --color-primary → bg-primary, text-primary, border-primary
-   --font-sans     → font-sans
+   clases automáticamente
 ================================ */
 @theme {
   /* Fuentes */
@@ -39,6 +37,21 @@
   --radius-sm: 0.5rem;
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
+
+  /* Tipos de servicios */
+  --color-domicilio: #3b82f6;
+  --color-domicilio-bg: #eff6ff;
+  --color-local: #8b5cf6;
+  --color-local-bg: #f5f3ff;
+
+  /* Solicitudes */
+  --color-pending: #f59e0b;
+  --color-pending-bg: #fffbeb;
+  --color-completed: #22c55e;
+  --color-completed-bg: #f0fdf4;
+  --color-cancelled: #ef4444;
+  --color-cancelled-bg: #fef2f2;
+
 }
 
 /* ================================
