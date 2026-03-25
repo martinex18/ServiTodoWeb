@@ -21,7 +21,9 @@ export const registerCustomer = async (form) => {
     // Guardar datos adicionales en Firestore
     await setDoc(doc(db, "client", user.uid), {
       name: form.name,
+      type_id: form.type_id,
       id_number: form.id_number,
+      birthdate: form.birthdate,
       phone: form.phone,
       city: form.city,
       email: form.email,

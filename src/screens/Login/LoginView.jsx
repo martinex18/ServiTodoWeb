@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Loader2, Mail, Lock } from "lucide-react";
+import { Loader2, Mail, Lock, ChevronLeft, User, Briefcase } from "lucide-react";
 import { login } from "../../services/login";
 
 const inputClass = "w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all";
@@ -19,7 +19,7 @@ const LoginView = () => {
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if( !emailRegex.test(form.email)) {
+    if (!emailRegex.test(form.email)) {
       setError("El formato del correo no es válido.");
       return false;
     }
@@ -29,16 +29,16 @@ const LoginView = () => {
       return false;
     }
 
-    if (!/[A-Z]/.test(form.password)){
+    if (!/[A-Z]/.test(form.password)) {
       setError("La contraseña debe tener al menos una mayúscula.");
       return false;
     }
 
-    if(!/[0-9]/.test(form.password)){
+    if (!/[0-9]/.test(form.password)) {
       setError("La contraseña debe tener al menos un número.");
     }
 
-    if(!/[!@#$%^&*]/.test(form.password)){
+    if (!/[!@#$%^&*]/.test(form.password)) {
       setError("La contraseña debe tener al menos un carácter especial.")
       return false;
     }
@@ -75,6 +75,9 @@ const LoginView = () => {
       {/* Branding */}
       <div className="hidden lg:flex flex-col items-center justify-center bg-primary px-12 relative overflow-hidden">
         <div className="absolute -top-20 -left-20 w-64 h-64 rounded-full bg-white/5" />
+        <Link to='/' className="absolute top-6 left-6 z-10 text-white hover:opacity-70 transition-opacity">
+          <ChevronLeft size={50} />
+        </Link>
         <div className="absolute bottom-[-60px] right-[-60px] w-80 h-80 rounded-full bg-white/5" />
         <div className="absolute top-1/2 -right-10 w-40 h-40 rounded-full bg-white/5" />
 
@@ -85,7 +88,7 @@ const LoginView = () => {
           </h1>
           <p className="text-white/70 text-base max-w-sm mx-auto">Encuentra el profesional que necesitas o expande tu negocio con ServiTodo</p>
 
-          <div className="flex- items-center justify-center gap-8 mt-10">
+          <div className="flex items-center justify-center gap-8 mt-10">
             <div className="text-center">
               <p className="text-2xl font-bold text-white">500+</p>
               <p className="text-white/60 text-xs mt-1">Trabajadores</p>
@@ -181,18 +184,14 @@ const LoginView = () => {
             <div className="hidden lg:flex items-center justify-center gap-4">
               <Link to="/register-customer">
                 <button className="flex flex-col items-center justify-center bg-white border-2 border-primary text-primary font-semibold px-6 py-4 rounded-2xl hover:bg-primary hover:text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 mb-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A3 3 0 017 17h10a3 3 0 011.879.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  <span className="text-sm">Cliente</span>
+                  <User size={30} />
+                  <span className="text-sm mt-0.5">Cliente</span>
                 </button>
               </Link>
               <Link to="/register-worker">
                 <button className="flex flex-col items-center justify-center bg-white border-2 border-primary text-primary font-semibold px-6 py-4 rounded-2xl hover:bg-primary hover:text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 mb-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span className="text-sm">Trabajador</span>
+                  <Briefcase size={30} />
+                  <span className="text-sm mt-0.5">Trabajador</span>
                 </button>
               </Link>
             </div>
