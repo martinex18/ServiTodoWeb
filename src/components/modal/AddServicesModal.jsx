@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { registerServices } from "../../services/worker/registerServices.js";
-import { getCategories } from "@/services/getCategories.js";
 import { X, Loader2 } from "lucide-react";
+import { DAYS } from "@/services/days";
+import { SUBCATEGORIES } from "@/services/subCategories.js";
+import { useAuth } from "@/context/AuthContext";
 
 const ServicesTypes = [
   { value: "domicilio", label: "Domicilio" },
@@ -15,22 +17,39 @@ const labelClass = "block text-sm font-medium text-gray-700 mb-1.5";
 export default function AddServicesModal({ open, onClose }) {
   const [form, setForm] = useState({
     name: "",
-    category: "",
+    subcategory: "",
     description: "",
+    schedule: { days: [], start: '', end: '' },
     type: "",
     price: "",
   });
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState([]);
+  const { user } = useAuth();
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.category || !form.description || !form.type || !form.price) {
+    if (!form.name || !form.subcategory || !form.description || !form.schedule || !form.type || !form.price) {
       setError("Todos los campos son obligatorios");
       return;
     }
+
+    if (form.schedule.days.length === 0) {
+      setError('Selecciona al menos un día disponible.');
+      return;
+    }
+
+    if (!form.schedule.start || !form.schedule.end) {
+      setError('Debes establecer el horario de inicio y fin.');
+      return;
+    }
+
+    if (form.schedule.start >= form.schedule.end) {
+      setError('La hora de fin debe ser mayor a la hora de inicio.')
+      return;
+    }
+
     setError("");
     setLoading(true);
 
@@ -38,20 +57,20 @@ export default function AddServicesModal({ open, onClose }) {
     setLoading(false);
 
     if (response.success) {
-      setForm({ name: "", category: "", description: "", type: "", price: "" });
+      setForm({ name: "", subcategory: "", description: "", schedule: { days: [], start: '', end: '' }, type: "", price: "" });
       onClose();
     } else {
       setError(response.message);
     }
   };
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const response = await getCategories();
-      if (response.success) setCategories(response.categories);
-    };
-    fetchCategories();
-  }, []);
+  const toggleDay = (dayKey) => {
+    const days = form.schedule.days.includes(dayKey)
+      ? form.schedule.days.filter((d) => d !== dayKey)
+      : [...form.schedule.days, dayKey];
+
+    setForm({ ...form, schedule: { ...form.schedule, days } });
+  }
 
   if (!open) return null;
 
@@ -76,7 +95,6 @@ export default function AddServicesModal({ open, onClose }) {
 
         {/* Form */}
         <form onSubmit={handleRegister} className="px-6 py-5 space-y-4">
-
           {/* Nombre */}
           <div>
             <label className={labelClass}>Nombre del servicio</label>
@@ -89,20 +107,22 @@ export default function AddServicesModal({ open, onClose }) {
             />
           </div>
 
-          {/* Categoría */}
-          <div>
-            <label className={labelClass}>Categoría</label>
-            <select
-              className={inputClass}
-              value={form.category}
-              onChange={(e) => setForm({ ...form, category: e.target.value })}
-            >
-              <option value="" disabled>Selecciona una categoría</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.name}>{cat.name}</option>
-              ))}
-            </select>
-          </div>
+          {/* Subcategoría */}
+          {SUBCATEGORIES[user.job] && (
+            <div>
+              <label className={labelClass}>Subcategoria</label>
+              <select
+                className={inputClass}
+                value={form.subcategory}
+                onChange={(e) => setForm({ ...form, subcategory: e.target.value })}
+              >
+                <option value="" disabled>Selecciona una subcategoria</option>
+                {SUBCATEGORIES[user.job].map((sub) => (
+                  <option key={sub} value={sub}>{sub}</option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {/* Descripción */}
           <div>
@@ -113,6 +133,35 @@ export default function AddServicesModal({ open, onClose }) {
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
+          </div>
+
+          {/* Disponibilidad */}
+          <div>
+            <label className={labelClass}>Días y horarios</label>
+            <div className="flex gap-2 flex-wrap mt-2">
+              {DAYS.map((day) => (
+                <button key={day.key} type="button" onClick={() => toggleDay(day.key)} className={`px-3 py-1.5 rounded-lg text-xs font-semibold border-2 transition-all ${form.schedule.days.includes(day.key)
+                  ? "border-primary bg-primary text-white"
+                  : "border-gray-200 bg-white text-gray-500 hover:border-primary"
+                  }`}>
+                  {day.label}
+                </button>
+              ))}
+            </div>
+
+            {form.schedule.days.length > 0 && (
+              <div className="flex items-center gap-3 mt-3">
+                <div className="flex-1">
+                  <label className={labelClass}>Hora inicio</label>
+                  <input type="time" className={inputClass} value={form.schedule.start} onChange={(e) => setForm({ ...form, schedule: { ...form.schedule, start: e.target.value } })} />
+                </div>
+                <span className="text-gray-400 mt-6">-</span>
+                <div className="flex-1">
+                  <label className={labelClass}>Hora fin</label>
+                  <input type="time" className={inputClass} value={form.schedule.end} onChange={(e) => setForm({ ...form, schedule: { ...form.schedule, end: e.target.value } })} />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Tipo y Precio */}

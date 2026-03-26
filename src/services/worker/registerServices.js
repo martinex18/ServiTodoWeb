@@ -11,8 +11,9 @@ export const registerServices = async (form) => {
     await addDoc(collection(db, "services"), {
       user_id: user.uid,
       name: form.name,
-      category: form.category,
+      subcategory: form.subcategory,
       description: form.description,
+      schedule: form.schedule,
       type: form.type,
       price: form.price,
       available: true,
