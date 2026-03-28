@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { EditIcon, Plus, Briefcase, ChevronRight, Tag, MapPin } from 'lucide-react';
+import { EditIcon, Plus, Briefcase, ChevronRight, Tag, MapPin, UserCircle } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../../context/AuthContext'
 import Header from "../../../components/header/header";
 import AddServicesModal from "../../../components/modal/addServicesModal";
 import { getWorkerServices } from "@/services/worker/getWorkerServices";
 import { DAYS } from "@/services/days";
+import RequestPermissionModal from "@/components/modal/requestPermissionModal";
+import { requestNotification } from "@/services/requestNotification";
 
 const typeColors = {}
 
@@ -15,6 +17,7 @@ const HomeWorkerView = () => {
   const [loadingServices, setLoadingServices] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
+  const [openPermissionModal, setOpenPermissionModal] = useState(false);
 
   const fetchServices = async () => {
     const response = await getWorkerServices(user.uid);
@@ -23,8 +26,32 @@ const HomeWorkerView = () => {
   }
 
   useEffect(() => {
-    fetchServices();
+    const int = async () => {
+      fetchServices();
+
+      if (Notification.permission === 'granted') {
+        await requestNotification(user.uid);
+        return;
+      }
+
+      if (Notification.permission === 'denied') return;
+      if (sessionStorage.getItem('notificationDismissed')) return;
+
+      setOpenPermissionModal(true);
+    }
+
+    int();
   }, [user.uid]);
+
+  const handleAccept = async () => {
+    setOpenPermissionModal(false);
+    await requestNotification(user.uid);
+  }
+
+  const handleDismiss = () => {
+    sessionStorage.setItem('notification_permission_denied', 'true');
+    setOpenPermissionModal(false);
+  }
 
   const handleLogout = async () => {
     await logout();
@@ -132,6 +159,12 @@ const HomeWorkerView = () => {
               <div className="space-y-2">
                 <button className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors text-left group">
                   <div className="w-9 h-9 rounded-xl bg-gray-100 group-hover:bg-primary-light flex items-center justify-center transition-colors">
+                    <UserCircle size={16} className="text-gray-500 group-hover:text-primary transition-colors" />
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">Editar mi perfil</span>
+                </button>
+                <button className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors text-left group">
+                  <div className="w-9 h-9 rounded-xl bg-gray-100 group-hover:bg-primary-light flex items-center justify-center transition-colors">
                     <EditIcon size={16} className="text-gray-500 group-hover:text-primary transition-colors" />
                   </div>
                   <span className="text-sm font-medium text-gray-700">Gestionar mis servicios</span>
@@ -170,6 +203,12 @@ const HomeWorkerView = () => {
           </div>
         </div>
       </div>
+
+      <RequestPermissionModal
+        open={openPermissionModal}
+        onClose={handleDismiss}
+        onAccept={handleAccept}
+      />
 
       <AddServicesModal
         open={openModal}

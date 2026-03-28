@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { registerServices } from "../../services/worker/registerServices.js";
-import { X, Loader2 } from "lucide-react";
+import { X, Loader2, ImageIcon, FolderOpen, Camera } from "lucide-react";
 import { DAYS } from "@/services/days";
 import { SUBCATEGORIES } from "@/services/subCategories.js";
 import { useAuth } from "@/context/AuthContext";
+import { useDropzone } from "react-dropzone";
+import { uploadImage } from "@/services/cloudinary/uploadImage.js";
 
 const ServicesTypes = [
   { value: "domicilio", label: "Domicilio" },
@@ -27,10 +29,22 @@ export default function AddServicesModal({ open, onClose }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
+  const [imagen, setImagen] = useState('');
+  const [imagenPreview, setImagenPreview] = useState('');
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: { 'image/*': [] },
+    maxFiles: 1,
+    onDrop: (acceptedFiles) => {
+      const file = acceptedFiles[0];
+      setImagen(file);
+      setImagenPreview(URL.createObjectURL(file));
+    }
+  });
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.subcategory || !form.description || !form.schedule || !form.type || !form.price) {
+    if (!imagen || !form.name || !form.subcategory || !form.description || !form.schedule || !form.type || !form.price) {
       setError("Todos los campos son obligatorios");
       return;
     }
@@ -50,19 +64,46 @@ export default function AddServicesModal({ open, onClose }) {
       return;
     }
 
+    if (!imagen) {
+      setError('La imagen del servicio es obligatoria')
+    }
+
+
     setError("");
     setLoading(true);
 
-    const response = await registerServices(form);
+    let imageUrl = '';
+    if (imagen) {
+      const imageRes = await uploadImage(imagen);
+      if (imageRes.success) {
+        imageUrl = imageRes.url;
+      } else {
+        setError('Error subiendo la imagen.');
+        setLoading(false);
+        return;
+      }
+    }
+    console.log('imageUrl:', imageUrl);
+    const response = await registerServices({ ...form, imageUrl });
     setLoading(false);
 
     if (response.success) {
       setForm({ name: "", subcategory: "", description: "", schedule: { days: [], start: '', end: '' }, type: "", price: "" });
       onClose();
+      resetForm();
     } else {
       setError(response.message);
     }
   };
+
+  const resetForm = () => {
+    onClose();
+    setForm({ name: "", subcategory: "", description: "", schedule: { days: [], start: '', end: '' }, type: "", price: "" });
+    setImagen('');
+    setImagenPreview('');
+    setError('');
+    setLoading(false);
+  }
 
   const toggleDay = (dayKey) => {
     const days = form.schedule.days.includes(dayKey)
@@ -76,7 +117,7 @@ export default function AddServicesModal({ open, onClose }) {
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50 px-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col">
 
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100">
@@ -94,7 +135,58 @@ export default function AddServicesModal({ open, onClose }) {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleRegister} className="px-6 py-5 space-y-4">
+        <form onSubmit={handleRegister} className="px-6 py-5 space-y-4 overflow-y-auto">
+          {/* Imagen */}
+          <div className="border-2 border-dashed border-gray-200 rounded-xl p-4">
+            {imagenPreview ? (
+              <div className="relative">
+                <img src={imagenPreview} alt="Preview" className="w-full h-40 object-cover rounded-xl" />
+                <button type="button" onClick={() => { setImagen(null); setImagenPreview(null); }} className="absolute top-2 right-2 p-1 bg-white rounded-full shadow text-gray-500 hover:text-error transition-colors">
+                  <X size={16} />
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center gap-3">
+                {/* Dropzone */}
+                <div {...getRootProps()} className="w-full flex flex-col items-center gap-2 cursor-pointer py-4">
+                  <input {...getInputProps()} />
+                  <ImageIcon size={28} className="text-gray-300" />
+                  <p className="text-sm text-gray-400 text-center">
+                    {isDragActive ? 'Suelta aqui...' : 'Arrasta una imagen aqui'}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2 w-full">
+                  <div className="flex-1 h-px bg-gray-100" />
+                  <span className="text-xs text-gray-400">o</span>
+                  <div className="flex-1 h-px bg-gray-100" />
+                </div>
+
+                {/* Botones */}
+                <div className="flex gap-2 w-full">
+                  <label className="flex-1 flex items-center justify-center gap-2 py-2 border border-gray-200 rounded-xl text-xs font-medium text-gray-600 hover:bg-gray-50 cursor-pointer transition-colors">
+                    <input type="file" accept="image/*" className="hidden" onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) { setImagen(file); setImagenPreview(URL.createObjectURL(file)); }
+                    }} />
+                    <FolderOpen size={14} />
+                    Seleccionar foto
+                  </label>
+
+                  {/* Desde el celular */}
+                  <label className="flex-1 flex items-center justify-center gap-2 py-2 border border-gray-200 rounded-xl text-xs font-medium text-gray-600 hover:bg-gray-50 cursor-pointer transition-colors sm:hidden">
+                    <input type="file" accept="image/*" capture='environment' className="hidden" onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) { setImagen(file); setImagenPreview(URL.createObjectURL(file)); }
+                    }} />
+                    <Camera size={14} />
+                    Tomar foto
+                  </label>
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Nombre */}
           <div>
             <label className={labelClass}>Nombre del servicio</label>
@@ -149,6 +241,7 @@ export default function AddServicesModal({ open, onClose }) {
               ))}
             </div>
 
+            {/* Horarios */}
             {form.schedule.days.length > 0 && (
               <div className="flex items-center gap-3 mt-3">
                 <div className="flex-1">
@@ -203,7 +296,7 @@ export default function AddServicesModal({ open, onClose }) {
           <div className="flex justify-end gap-3 pt-2">
             <button
               type="button"
-              onClick={onClose}
+              onClick={() => { resetForm(); }}
               className="px-5 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
             >
               Cancelar
@@ -213,7 +306,7 @@ export default function AddServicesModal({ open, onClose }) {
               disabled={loading}
               className="px-5 py-2.5 text-sm font-medium text-white bg-primary rounded-xl hover:bg-primary-dark transition-colors disabled:opacity-60 flex items-center gap-2"
             >
-              {loading ? <><Loader2 size={16} className="animate-spin" /> Guardando...</> : "Guardar servicio"}
+              {loading ? <><Loader2 size={16} className="animate-spin" /> Publicando...</> : "Publicar servicio"}
             </button>
           </div>
 

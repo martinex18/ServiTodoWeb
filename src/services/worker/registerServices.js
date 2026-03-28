@@ -10,6 +10,7 @@ export const registerServices = async (form) => {
 
     await addDoc(collection(db, "services"), {
       user_id: user.uid,
+      imageUrl: form.imageUrl || "",
       name: form.name,
       subcategory: form.subcategory,
       description: form.description,
