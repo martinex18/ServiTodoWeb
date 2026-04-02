@@ -6,7 +6,7 @@ import HomeWorkerView from "../screens/Worker/home/HomeWorkerView";
 import LoginView from "../screens/Login/LoginView";
 import RegisterCustomerView from "../screens/Customer/RegisterCustomer/RegisterCustomerView";
 import AuthRedirectRoute from "../components/AuthRedirectRoute";
-import HomeCustomerView from "@/screens/Customer/RegisterCustomer/HomeCustomerView";
+import HomeCustomerView from "@/screens/Customer/Home/HomeCustomerView";
 
 export default function AppRoutes() {
   return (
@@ -29,7 +29,7 @@ export default function AppRoutes() {
             <RegisterWorkerView />
           </AuthRedirectRoute>
         } />
-        
+
         <Route path="/register-customer" element={<RegisterCustomerView />} />
 
         <Route
