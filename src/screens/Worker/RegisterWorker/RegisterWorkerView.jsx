@@ -13,13 +13,13 @@ const RegisterWorkerView = () => {
     const [loading, setLoading] = useState(false);
     const [jobs, setJobs] = useState([]);
     const [typeId, setTypeId] = useState([]);
-    const [form, setForm] = useState({ name: '', type_id: '', id_number: '', birthdate: '', phone: '', city: '', job: '', email: '', password: '', confirmPassword: '' })
+    const [form, setForm] = useState({ name: '', type_id: '', id_number: '', birthdate: '', phone: '', city: '', job: '', exp: '', hasLocal: false, address: '', email: '', password: '', confirmPassword: '' })
     let navigate = useNavigate();
 
     const [step, setStep] = useState(1);
 
     const validateForm = () => {
-        if (!form.name || !form.type_id || !form.id_number || !form.birthdate || !form.phone || !form.city || !form.job || !form.email || !form.password || !form.confirmPassword) {
+        if (!form.name || !form.type_id || !form.id_number || !form.birthdate || !form.phone || !form.city || !form.job || !form.exp || !form.email || !form.password || !form.confirmPassword) {
             setError("Todos los campos son obligatorios.");
             return false;
         }
@@ -103,9 +103,9 @@ const RegisterWorkerView = () => {
 
     const handleNext = () => {
         setError('');
-        if (!form.name || !form.type_id || !form.id_number || !form.birthdate || !form.phone || !form.city || !form.job) {
+        if (!form.name || !form.type_id || !form.id_number || !form.birthdate || !form.phone || !form.city || !form.job || !form.exp) {
             setError("Todos los campos son obligatorios.");
-            return;
+            return false;
         }
         setStep(2);
     }
@@ -121,7 +121,7 @@ const RegisterWorkerView = () => {
         setLoading(false);
 
         if (response.success) {
-            setForm({ name: "", type_id: "", id_number: "", birthdate: "", phone: "", city: "", job: "", email: "", password: "", confirmPassword: "" });
+            setForm({ name: '', type_id: '', id_number: '', birthdate: '', phone: '', city: '', job: '', exp: '', hasLocal: false, address: '', email: '', password: '', confirmPassword: '' });
             navigate('/home-worker');
         } else {
             setError(response.message);
@@ -173,7 +173,7 @@ const RegisterWorkerView = () => {
                         <Link to='/'><img src="src/assets/logo/logo.png" alt="ServiTodo" className="h-20" /></Link>
                     </div>
 
-                    <div className="mb-8">
+                    <div className="mb-4">
                         <h2 className="text-2xl font-semibold text-gray-900">Unete como prestador de servicios</h2>
                         <p className="text-gray-500 text-sm mt-1">Conectate con miles de clientes en tu ciudad</p>
                     </div>
@@ -223,7 +223,7 @@ const RegisterWorkerView = () => {
                                     <label className={labelClass}>Fecha de nacimiento</label>
                                     <div className="relative">
                                         <Calendar size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                        <input type="date" placeholder="30000000" className={inputClass} value={form.birthdate} onChange={(e) => setForm({ ...form, birthdate: e.target.value })} max={new Date(new Date().setFullYear(new Date().getFullYear() - 18)).toISOString().split('T')[0]} />
+                                        <input type="date" className={inputClass} value={form.birthdate} onChange={(e) => setForm({ ...form, birthdate: e.target.value })} max={new Date(new Date().setFullYear(new Date().getFullYear() - 18)).toISOString().split('T')[0]} />
                                     </div>
                                 </div>
 
@@ -243,19 +243,44 @@ const RegisterWorkerView = () => {
                                     </div>
                                 </div>
 
-                                <div>
-                                    <label className={labelClass}>Tipo de servicio</label>
-                                    <div className="relative">
-                                        <Briefcase size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                        <select className={inputClass} value={form.job} onChange={(e) => setForm({ ...form, job: e.target.value })}
-                                        >
-                                            <option value="" disabled>Selecciona una categoría</option>
-                                            {jobs.map((j) => (
-                                                <option key={j.id} value={j.name}>{j.name}</option>
-                                            ))}
-                                        </select>
+                                <div className="lg:flex items-center justify-between gap-3">
+                                    <div>
+                                        <label className={labelClass}>Tipo de servicio</label>
+                                        <div className="relative">
+                                            <Briefcase size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                            <select className={inputClass} value={form.job} onChange={(e) => setForm({ ...form, job: e.target.value })}
+                                            >
+                                                <option value="" disabled>Selecciona una categoría</option>
+                                                {jobs.map((j) => (
+                                                    <option key={j.id} value={j.name}>{j.name}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className={labelClass}>Años de experiencia</label>
+                                        <div className="relative">
+                                            <Briefcase size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                            <input type="text" placeholder="2 años" className={inputClass} value={form.exp} onChange={(e) => setForm({ ...form, exp: e.target.value })} />
+                                        </div>
                                     </div>
                                 </div>
+
+                                <div className="flex items-center gap-3">
+                                    <input type="checkbox" id="hasLocal" className="w-4 h-4 accent-primary" checked={form.hasLocal} onChange={(e) => setForm({ ...form, hasLocal: e.target.checked, address: '' })} />
+                                    <label className='text-sm font-medium text-gray-700' htmlFor="hasLocal">¿Tienes un punto fisico?</label>
+                                </div>
+
+                                {form.hasLocal && (
+                                    <div>
+                                        <label className={labelClass}>Dirección</label>
+                                        <div className="relative">
+                                            <MapPin size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                            <input type="text" placeholder="Cra 45 # 5084" className={inputClass} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
+                                        </div>
+                                    </div>
+                                )}
                             </>
                         )}
 
