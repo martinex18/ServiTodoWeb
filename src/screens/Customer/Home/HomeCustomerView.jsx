@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Search, Star, MapPin, TrendingUp } from "lucide-react";
 import { useAuth } from "../../../context/AuthContext";
 import Header from "../../../components/header/header";
@@ -36,6 +37,8 @@ const HomeCustomerView = () => {
               ...s,
               workerName: workerRes.worker?.name || 'Trabajador',
               workerCity: workerRes.worker?.city || "Ubicación",
+              workerJob: workerRes.worker.job || '',
+              workerPhone: workerRes.worker.phone || '',
             };
           })
         );
@@ -63,7 +66,7 @@ const HomeCustomerView = () => {
         links={[
           { name: "Inicio", to: "/home-customer" },
           { name: "Mis solicitudes", to: "/" },
-          { name: "Historial", to: "/" },
+          { name: "Perfil", to: "/" },
         ]}
         backgroundColor="bg-primary"
         textColor="text-white"
@@ -78,8 +81,12 @@ const HomeCustomerView = () => {
         }
       />
 
-      <div className="min-h-screen bg-gray-50 pt-24 pb-16 px-4 md:px-8 lg:px-12">
-
+      <motion.div initial={{ x: "-100%", opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: "-100%", opacity: 0 }}
+        transition={{ duration: 0.35 }}
+        className="min-h-screen bg-gray-50 pt-24 pb-16 px-4 md:px-8 lg:px-12"
+      >
         {/* Saludo */}
         <div className="mb-6">
           <h1 className="text-2xl font-semibold text-gray-900">
@@ -141,7 +148,7 @@ const HomeCustomerView = () => {
 
           {loadingServices ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[1, 2, 3].map((i) => (
+              {[1, 2, 3, 4].map((i) => (
                 <ServiceCardSkeleton key={i} />
               ))}
             </div>
@@ -152,24 +159,17 @@ const HomeCustomerView = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {filteredServices.slice(0, 3).map((s) => (
+              {filteredServices.map((s) => (
                 <ServiceCard
                   key={s.id}
-                  id={s.id}
-                  name={s.name}
-                  description={s.description}
-                  imageUrl={s.imageUrl}
-                  price={s.price}
-                  type={s.type}
-                  workerName={s.workerName}
-                  workerCity={s.workerCity}
+                  service={s}
                 />
               ))}
             </div>
           )}
         </div>
 
-      </div>
+      </motion.div>
     </>
   );
 };

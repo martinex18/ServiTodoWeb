@@ -1,4 +1,6 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
+
 import PrivateRoute from "../components/PrivateRoute";
 import RoleView from "../screens/Roles/RoleView";
 import RegisterWorkerView from "../screens/Worker/RegisterWorker/RegisterWorkerView";
@@ -7,11 +9,13 @@ import LoginView from "../screens/Login/LoginView";
 import RegisterCustomerView from "../screens/Customer/RegisterCustomer/RegisterCustomerView";
 import AuthRedirectRoute from "../components/AuthRedirectRoute";
 import HomeCustomerView from "@/screens/Customer/Home/HomeCustomerView";
+import ServiceDetailsView from "@/screens/Customer/ServiceDetails/ServiceDetailsView";
 
-export default function AppRoutes() {
+const AnimatedRoutes = () => {
+  const location = useLocation();
   return (
-    <BrowserRouter>
-      <Routes>
+    <AnimatePresence mode='wait'>
+      <Routes location={location} key={location.pathname}>
         <Route path="/" element={
           <AuthRedirectRoute>
             <RoleView />
@@ -49,7 +53,24 @@ export default function AppRoutes() {
             </PrivateRoute>
           }
         />
+
+        <Route
+          path="/service/:id"
+          element={
+            <PrivateRoute>
+              <ServiceDetailsView />
+            </PrivateRoute>
+          }
+        />
       </Routes>
+    </AnimatePresence>
+  )
+}
+
+export default function AppRoutes() {
+  return (
+    <BrowserRouter>
+      <AnimatedRoutes />
     </BrowserRouter>
   );
 }

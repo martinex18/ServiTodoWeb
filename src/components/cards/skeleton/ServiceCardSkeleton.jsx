@@ -13,9 +13,10 @@ const ServiceCardSkeleton = () => {
                 </div>
 
                 {/*title and description*/}
-                <div className="h-20">
+                <div className="h-24">
+                    <Skeleton variant="text" animation="wave" height={25} width={32} />
                     <Skeleton variant="text" animation="wave" height={25} />
-                    <Skeleton variant="text" animation="wave" height={50} className="text-sm text-gray-400 px-1 line-clamp-2" />
+                    <Skeleton variant="text" animation="wave" height={50} />
                 </div>
 
                 <div className="flex items-center gap-2 p-2.5 bg-gray-50 rounded-xl border border-gray-100">

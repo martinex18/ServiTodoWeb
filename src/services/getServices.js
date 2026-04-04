@@ -10,8 +10,6 @@ export const getServices = async () => {
       id: serv.id,
       ...serv.data(),
     }));
-
-    sessionStorage.setItem("services", JSON.stringify(services));
     return { success: true, services };
   } catch (error) {
     console.error("Error obteniendo servicios para el customer: ", error);
