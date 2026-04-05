@@ -14,9 +14,8 @@ const ServiceCardSkeleton = () => {
 
                 {/*title and description*/}
                 <div className="h-24">
-                    <Skeleton variant="text" animation="wave" height={25} width={32} />
-                    <Skeleton variant="text" animation="wave" height={25} />
-                    <Skeleton variant="text" animation="wave" height={50} />
+                    <Skeleton variant="text" animation="wave" height={30} width={200} />
+                    <Skeleton variant="text" animation="wave" height={60} />
                 </div>
 
                 <div className="flex items-center gap-2 p-2.5 bg-gray-50 rounded-xl border border-gray-100">
@@ -28,7 +27,10 @@ const ServiceCardSkeleton = () => {
                         <Skeleton variant="text" animation="wave" width={80} height={20} className="text-xs flex items-center gap-0.5" />
                     </div>
                 </div>
-                <Skeleton variant="rectangular" animation="wave" height={40} className="rounded-xl mt-4" />
+                <div className="w-full flex items-center justify-between gap-6 mt-1">
+                    <Skeleton variant="text" animation="wave" height={34} width={110} className="" />
+                    <Skeleton variant="rectangular" animation="wave" height={30} width={200} className="rounded-xl" />
+                </div>
             </div>
         </div>
     )

@@ -234,7 +234,7 @@ const ServiceDetailsView = () => {
                                                 <p className="text-primary">${Number(service.price).toLocaleString('es-CO')}</p>
                                             </div>
 
-                                            <div className="w-full h-px bg-gray-400 my-2" />
+                                            <div className="w-full h-px bg-gray-300 my-2" />
 
                                             <div className="flex items-center justify-between">
                                                 <p className="text-sm text-gray-600">Domicilio</p>

@@ -24,11 +24,8 @@ const ServiceCard = ({ service }) => {
                         <div className="w-full mb-1">
                             <p className="text-primary font-semibold text-xs px-1">4.9 (128 reviews)</p>
                         </div>
-                        <div className="h-24">
+                        <div className="h-20">
                             <h3 className="text-gray-900 text-sm font-bold px-1">{name}</h3>
-                            <p className="text-primary font-bold text-sm px-1 py-0.5">
-                                ${Number(price).toLocaleString('es-CO')}
-                            </p>
                             <p className="text-sm text-gray-400 px-1 line-clamp-2">{description}</p>
                         </div>
 
@@ -49,9 +46,14 @@ const ServiceCard = ({ service }) => {
             }
 
             footer={
-                <motion.button whileHover={{ scale: 1.04 }} onClick={() => navigate(`/service/${id}`, { state: { service } })} className="w-full py-2 text-xs font-semibold text-white bg-primary hover:bg-primary-dark hover:cursor-pointer rounded-xl transition-colors">
-                    Ver detalles
-                </motion.button>
+                <div className="w-full flex items-center justify-between gap-6">
+                    <p className="text-primary font-bold text-sm px-1 py-0.5">
+                        ${Number(price).toLocaleString('es-CO')}
+                    </p>
+                    <motion.button whileHover={{ scale: 1.04 }} onClick={() => navigate(`/service/${id}`, { state: { service } })} className="w-full py-2 text-xs font-semibold text-white bg-primary hover:bg-primary-dark hover:cursor-pointer rounded-xl transition-colors">
+                        Ver detalles
+                    </motion.button>
+                </div>
             }
         />
     )
