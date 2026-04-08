@@ -7,8 +7,8 @@ import Header from "@/components/header/header";
 import { getWorkersById } from "@/services/worker/getWorkersById";
 import { MapPin, ChevronLeft, Calendar, Clock, Briefcase, Star } from "lucide-react";
 import { DAYS } from "@/services/days";
-import ServiceDetailsSkeleton from "@/components/cards/skeleton/ServiceDetailsSkeleton";
 import { useAuth } from "@/context/AuthContext";
+import RequestServiceModal from "@/components/modal/RequestServiceModal";
 
 const ServiceDetailsView = () => {
     const { logout } = useAuth();
@@ -17,6 +17,7 @@ const ServiceDetailsView = () => {
     const navigate = useNavigate();
     const [worker, setWorker] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [openRequest, setOpenRequest] = useState(false);
 
     useEffect(() => {
         const fetchWorker = async () => {
@@ -32,19 +33,9 @@ const ServiceDetailsView = () => {
     }, [service]);
 
     const totalPrice = () => {
-        let total = Number(service.price) + 5000;
+        let total = Number(service?.price) + 5000;
         return total;
     }
-
-    {/*const handleRequestService = async () =>{
-        const orderData = {
-            service_id: service.id,
-            worker_id: service.id,
-            client_id: user.id,
-            price: Number(service.price),
-            
-        }
-    }*/}
 
     const handleLogout = async () => {
         await logout();
@@ -193,7 +184,7 @@ const ServiceDetailsView = () => {
                                         </div>
                                     ) :
                                         <>
-                                            <div className="rounded-xl overflow-hidden h-90">
+                                            <div className="rounded-xl overflow-hidden h-90 relative z-0">
                                                 <MapContainer
                                                     center={[worker.location.lat, worker.location.lng]}
                                                     zoom={15}
@@ -206,7 +197,6 @@ const ServiceDetailsView = () => {
                                                         </Popup>
                                                     </Marker>
                                                 </MapContainer>
-
                                             </div>
                                             <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
                                                 <MapPin size={12} /> {worker?.address}, {worker?.city}, Colombia
@@ -229,21 +219,19 @@ const ServiceDetailsView = () => {
 
                                     <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-xl mb-5">
                                         <div className="w-full px-2 text-sm">
-                                            <div className="flex items-center justify-between">
+                                            <div className="flex items-center justify-between border-b-2 pb-2">
                                                 <p className="text-gray-600">Servicio</p>
-                                                <p className="text-primary">${Number(service.price).toLocaleString('es-CO')}</p>
+                                                <p className="text-primary">${Number(service?.price).toLocaleString('es-CO')}</p>
                                             </div>
 
-                                            <div className="w-full h-px bg-gray-300 my-2" />
-
-                                            <div className="flex items-center justify-between">
+                                            <div className="flex items-center justify-between pt-2">
                                                 <p className="text-sm text-gray-600">Domicilio</p>
                                                 <p className="text-sm text-primary">${'5.000'}</p>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <button className="w-full py-3 bg-primary text-white hover:bg-primary-dark hover:cursor-pointer text-sm font-semibold rounded-xl transition-colors mb-3">
+                                    <button className="w-full py-3 bg-primary text-white hover:bg-primary-dark hover:cursor-pointer text-sm font-semibold rounded-xl transition-colors mb-3" onClick={() => setOpenRequest(true)}>
                                         Solicitar servicio
                                     </button>
                                     <button className="w-full py-3 border border-primary/30 text-primary text-sm font-semibold rounded-xl hover:bg-primary-light hover:cursor-pointer transition-colors mb-3">
@@ -260,6 +248,14 @@ const ServiceDetailsView = () => {
                     </div>
                 </motion.div>
             }
+            {openRequest && (
+                <RequestServiceModal
+                    open={openRequest}
+                    onClose={() => setOpenRequest(false)}
+                    service={service}
+                    worker={worker}
+                />
+            )}
         </>
     );
 }
