@@ -26,3 +26,6 @@ dist-ssr
 
 # Firebase Service Worker
 public/firebase-messaging-sw.js
+
+# Firebase
+.firebaserc
