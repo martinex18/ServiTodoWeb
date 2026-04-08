@@ -2,7 +2,7 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig";
-import { geoCoordinates } from "../geocoding";
+import { geoCoordinates } from "../utils/geocoding";
 
 /**
  * Registra un nuevo trabajador.

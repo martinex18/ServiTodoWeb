@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/header/header";
 import { getWorkersById } from "@/services/worker/getWorkersById";
 import { MapPin, ChevronLeft, Calendar, Clock, Briefcase, Star } from "lucide-react";
-import { DAYS } from "@/services/days";
+import { DAYS } from "@/services/utils/days";
 import { useAuth } from "@/context/AuthContext";
 import RequestServiceModal from "@/components/modal/RequestServiceModal";
 

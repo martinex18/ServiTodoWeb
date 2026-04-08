@@ -1,6 +1,6 @@
 import { getToken } from "firebase/messaging";
 import { messaging } from "@/firebaseConfig";
-import { updateWorkerToken } from "./worker/updateWorkerToken";
+import { updateWorkerToken } from "../worker/updateWorkerToken";
 
 export async function requestNotification(uid) {
   try {

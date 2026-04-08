@@ -5,9 +5,9 @@ import { useAuth } from '../../../context/AuthContext'
 import Header from "../../../components/header/header";
 import AddServicesModal from "../../../components/modal/addServicesModal";
 import { getWorkerServices } from "@/services/worker/getWorkerServices";
-import { DAYS } from "@/services/days";
+import { DAYS } from "@/services/utils/days";
 import RequestPermissionModal from "@/components/modal/requestPermissionModal";
-import { requestNotification } from "@/services/requestNotification";
+import { requestNotification } from "@/services/notifications/requestNotification";
 
 const typeColors = {}
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { registerServices } from "../../services/worker/registerServices.js";
 import { X, Loader2, ImageIcon, FolderOpen, Camera } from "lucide-react";
-import { DAYS } from "@/services/days";
+import { DAYS } from "@/services/utils/days.js";
 import { SUBCATEGORIES } from "@/services/subCategories.js";
 import { useAuth } from "@/context/AuthContext";
 import { useDropzone } from "react-dropzone";
