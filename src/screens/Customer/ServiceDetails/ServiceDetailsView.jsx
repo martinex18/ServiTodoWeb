@@ -2,22 +2,47 @@ import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Header from "@/components/header/header";
 import { getWorkersById } from "@/services/worker/getWorkersById";
 import { MapPin, ChevronLeft, Calendar, Clock, Briefcase, Star } from "lucide-react";
 import { DAYS } from "@/services/utils/days";
 import { useAuth } from "@/context/AuthContext";
 import RequestServiceModal from "@/components/modal/RequestServiceModal";
+import { Avatar } from "@mui/material";
+import WorkerProfileModal from "@/components/modal/WorkerProfileModal";
+import { getServiceById } from "@/services/serviceDetails/getServiceById";
 
 const ServiceDetailsView = () => {
     const { logout } = useAuth();
-    const { state } = useLocation();
-    const service = state?.service;
+    const location = useLocation();
+    const [service, setService] = useState(location.state?.service || null);
     const navigate = useNavigate();
     const [worker, setWorker] = useState(null);
     const [loading, setLoading] = useState(true);
     const [openRequest, setOpenRequest] = useState(false);
+    const [openProfile, setOpenProfile] = useState(false);
+    const { id } = useParams();
+
+    useEffect(() => {
+        const fetchService = async () => {
+            const response = await getServiceById(id);
+            if (service) {
+                setLoading(false);
+                return;
+            }
+            setLoading(true);
+
+            if (response.success) {
+                setService(response.services);
+            } else {
+                console.log('Servicio no encontrado');
+            }
+            setLoading(false);
+        }
+        fetchService();
+    }, [id]);
+
 
     useEffect(() => {
         const fetchWorker = async () => {
@@ -29,7 +54,6 @@ const ServiceDetailsView = () => {
             }
         };
         fetchWorker();
-        setLoading(false);
     }, [service]);
 
     const totalPrice = () => {
@@ -135,10 +159,7 @@ const ServiceDetailsView = () => {
                                     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-3">
                                         <h2 className="text-md font-semibold text-gray-900 mb-4">Prestador de servicio</h2>
                                         <div className="flex items-center gap-4">
-                                            <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold shrink-0">
-                                                {worker?.name?.charAt(0) || '?'}
-                                            </div>
-
+                                            <Avatar alt={worker?.name} sx={{ width: 56, height: 56, bgcolor: '#5f8d92' }}>{worker?.name?.charAt(0) || '?'}</Avatar>
                                             <div className="flex-1">
                                                 <p className="font-semibold text-gray-900">{worker?.name}</p>
                                                 <p className="text-sm text-gray-500 flex items-center gap-2">
@@ -158,7 +179,7 @@ const ServiceDetailsView = () => {
                                                 </p>
                                             </div>
 
-                                            <button className="px-4 py-2 text-sm font-medium text-primary border border-primary/30 bg-primary-light hover:bg-primary hover:text-white hover:cursor-pointer rounded-xl transition-all">
+                                            <button className="px-4 py-2 text-sm font-medium text-primary border border-primary/30 bg-primary-light hover:bg-primary hover:text-white hover:cursor-pointer rounded-xl transition-all" onClick={() => setOpenProfile(true)}>
                                                 Ver perfil
                                             </button>
                                         </div>
@@ -248,6 +269,15 @@ const ServiceDetailsView = () => {
                     </div>
                 </motion.div>
             }
+
+            {openProfile && (
+                <WorkerProfileModal
+                    open={openProfile}
+                    onClose={() => setOpenProfile(false)}
+                    worker={worker}
+                />
+            )}
+
             {openRequest && (
                 <RequestServiceModal
                     open={openRequest}
