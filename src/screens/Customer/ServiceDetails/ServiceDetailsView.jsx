@@ -12,6 +12,7 @@ import RequestServiceModal from "@/components/modal/RequestServiceModal";
 import { Avatar } from "@mui/material";
 import WorkerProfileModal from "@/components/modal/WorkerProfileModal";
 import { getServiceById } from "@/services/serviceDetails/getServiceById";
+import ServiceDetailsSkeleton from "@/components/cards/skeleton/ServiceDetailsSkeleton";
 
 const ServiceDetailsView = () => {
     const { logout } = useAuth();
@@ -26,40 +27,38 @@ const ServiceDetailsView = () => {
 
     useEffect(() => {
         const fetchService = async () => {
-            const response = await getServiceById(id);
-            if (service) {
-                setLoading(false);
-                return;
-            }
             setLoading(true);
 
-            if (response.success) {
-                setService(response.services);
-            } else {
-                console.log('Servicio no encontrado');
+            try {
+                const response = await getServiceById(id);
+                if (response.success) {
+                    setService(response.services);
+                } else {
+                    console.log('Servicio no encontrado');
+                }
+            } catch (error) {
+                console.error('Error al cargar los detalles del servicio', error);
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         }
         fetchService();
     }, [id]);
 
 
     useEffect(() => {
-        const fetchWorker = async () => {
-            if (!service?.user_id) return;
+        if (!service?.user_id) return;
 
+        const fetchWorker = async () => {
             const response = await getWorkersById(service.user_id);
             if (response.success) {
                 setWorker(response.worker);
             }
-        };
+        }
         fetchWorker();
-    }, [service]);
+    }, [service?.user_id]);
 
-    const totalPrice = () => {
-        let total = Number(service?.price) + 5000;
-        return total;
-    }
+    const totalPrice = Number(service?.price || 0) + 5000;
 
     const handleLogout = async () => {
         await logout();
@@ -87,9 +86,7 @@ const ServiceDetailsView = () => {
                 }
             />
             {loading ? (
-                <div className="min-h-screen pt-20 pb-16">
-                    <h1>Cargando los detalles del servicio...</h1>
-                </div>
+                <ServiceDetailsSkeleton />
             ) :
                 <motion.div
                     initial={{ x: '100%', opacity: 0 }}
@@ -98,7 +95,7 @@ const ServiceDetailsView = () => {
                     exit={{ x: '100%', opacity: 0 }}
                     className="min-h-screen bg-gray-50 pt-20 pb-16"
                 >
-                    <div className="px-6 md:px-10 py-4">
+                    <div className="px-4 md:px-8 lg:px-10 py-4 mt-2">
                         <button
                             onClick={() => navigate(-1)}
                             className="flex items-center gap-1 text-md text-gray-500 hover:text-primary hover:cursor-pointer transition-colors"
@@ -108,7 +105,7 @@ const ServiceDetailsView = () => {
                         </button>
                     </div>
 
-                    <div className="px-6 md:px-10">
+                    <div className="px-4 md:px-8 lg:px-10">
                         <div className="mb-6">
                             <span className="inline-flex items-center gap-1 text-sm font-medium text-white bg-primary/80 px-3 py-1 rounded-full mb-3">
                                 <MapPin size={16} />
@@ -122,13 +119,13 @@ const ServiceDetailsView = () => {
                             <div className="lg:col-span-2 space-y-5">
                                 {/* Imagen */}
                                 <div className="rounded-xl overflow-hidden border border-gray-100">
-                                    <img src={service?.imageUrl} alt={service?.name} className="w-full h-80 object-cover" />
+                                    <img src={service?.imageUrl} alt={service?.name} className="w-full h-56 md:h-72 lg:h-80 object-cover" />
                                 </div>
 
                                 {/* Descripcion */}
                                 <div className="p-2">
                                     <h2 className="font-semibold text-gray-900 mb-2">Descripción general del servicio</h2>
-                                    <p className="text-md text-gray-600 leading-relaxed">{service?.description}</p>
+                                    <p className="text-gray-600 leading-relaxed">{service?.description}</p>
                                 </div>
 
                                 {/* Disponibilidad */}
@@ -157,29 +154,31 @@ const ServiceDetailsView = () => {
                                 {/* Worker info */}
                                 {worker && (
                                     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-3">
-                                        <h2 className="text-md font-semibold text-gray-900 mb-4">Prestador de servicio</h2>
-                                        <div className="flex items-center gap-4">
-                                            <Avatar alt={worker?.name} sx={{ width: 56, height: 56, bgcolor: '#5f8d92' }}>{worker?.name?.charAt(0) || '?'}</Avatar>
-                                            <div className="flex-1">
-                                                <p className="font-semibold text-gray-900">{worker?.name}</p>
-                                                <p className="text-sm text-gray-500 flex items-center gap-2">
-                                                    <span className="flex items-center gap-1">
-                                                        <Briefcase size={12} /> {worker?.job}
-                                                    </span>
-                                                    -
-                                                    <span>{worker.exp} de experiencia</span>
-                                                </p>
-                                                <p className="text-sm text-gray-500 flex items-center gap-1 my-0.5"> <MapPin size={12} /> {worker?.city}</p>
-                                                <p className="text-sm text-primary flex items-center gap-2">
-                                                    <span className="flex items-center gap-1">
-                                                        <Star size={12} /> 4.9 (128 reviews)
-                                                    </span>
-                                                    -
-                                                    <span>Verificado</span>
-                                                </p>
+                                        <h2 className="text-md font-semibold text-gray-900 mb-2">Prestador de servicio</h2>
+                                        <div className="flex flex-col justify-between sm:flex-row sm:items-center gap-4">
+                                            <div className="flex items-center gap-3">
+                                                <Avatar alt={worker?.name} sx={{ width: 56, height: 56, bgcolor: '#5f8d92' }}>{worker?.name?.charAt(0) || '?'}</Avatar>
+                                                <div className="flex-1">
+                                                    <p className="font-semibold text-gray-900">{worker?.name}</p>
+                                                    <p className="text-sm text-gray-500 flex items-center gap-2">
+                                                        <span className="flex items-center gap-1">
+                                                            <Briefcase size={12} /> {worker?.job}
+                                                        </span>
+                                                        -
+                                                        <span>{worker.exp} de experiencia</span>
+                                                    </p>
+                                                    <p className="text-sm text-gray-500 flex items-center gap-1 my-0.5"> <MapPin size={12} /> {worker?.city}</p>
+                                                    <p className="text-sm text-primary flex items-center gap-2">
+                                                        <span className="flex items-center gap-1">
+                                                            <Star size={12} /> 4.9 (128 reviews)
+                                                        </span>
+                                                        -
+                                                        <span>Verificado</span>
+                                                    </p>
+                                                </div>
                                             </div>
 
-                                            <button className="px-4 py-2 text-sm font-medium text-primary border border-primary/30 bg-primary-light hover:bg-primary hover:text-white hover:cursor-pointer rounded-xl transition-all" onClick={() => setOpenProfile(true)}>
+                                            <button className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-primary border border-primary/30 bg-primary-light hover:bg-primary hover:text-white hover:cursor-pointer rounded-xl transition-all" onClick={() => setOpenProfile(true)}>
                                                 Ver perfil
                                             </button>
                                         </div>
@@ -205,7 +204,7 @@ const ServiceDetailsView = () => {
                                         </div>
                                     ) :
                                         <>
-                                            <div className="rounded-xl overflow-hidden h-90 relative z-0">
+                                            <div className="rounded-xl overflow-hidden h-64 md:h-80 relative z-0">
                                                 <MapContainer
                                                     center={[worker.location.lat, worker.location.lng]}
                                                     zoom={15}
@@ -229,11 +228,11 @@ const ServiceDetailsView = () => {
                             </div>
 
                             <aside className="space-y-4">
-                                <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 sticky top-24">
+                                <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 lg:sticky lg:top-24">
                                     <div className="mb-5">
                                         <p className="text-sm text-gray-400 mb-1">Precio total del servicio</p>
                                         <span className="flex gap-1 items-baseline-last">
-                                            <p className="text-3xl font-bold text-primary">${Number(totalPrice()).toLocaleString('es-CO')}</p>
+                                            <p className="text-2xl md:text-3xl font-bold text-primary wrap-break-word">${totalPrice.toLocaleString('es-CO')}</p>
                                             <p className="text-sm text-gray-400">COP</p>
                                         </span>
                                     </div>
