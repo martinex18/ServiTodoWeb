@@ -37,8 +37,8 @@ const HomeCustomerView = () => {
               ...s,
               workerName: workerRes.worker?.name || 'Trabajador',
               workerCity: workerRes.worker?.city || "Ubicación",
-              workerJob: workerRes.worker.job || '',
-              workerPhone: workerRes.worker.phone || '',
+              workerJob: workerRes.worker?.job || '',
+              workerPhone: workerRes.worker?.phone || '',
             };
           })
         );

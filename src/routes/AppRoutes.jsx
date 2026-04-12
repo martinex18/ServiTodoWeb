@@ -34,7 +34,11 @@ const AnimatedRoutes = () => {
           </AuthRedirectRoute>
         } />
 
-        <Route path="/register-customer" element={<RegisterCustomerView />} />
+        <Route path="/register-customer" element={
+          <AuthRedirectRoute>
+            <RegisterCustomerView />
+          </AuthRedirectRoute>
+        } />
 
         <Route
           path="/home-worker"
@@ -55,7 +59,7 @@ const AnimatedRoutes = () => {
         />
 
         <Route
-          path="/service/:id"
+          path="/service/:name/:id"
           element={
             <PrivateRoute>
               <ServiceDetailsView />

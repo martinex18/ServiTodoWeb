@@ -6,6 +6,12 @@ import { motion } from "framer-motion";
 const ServiceCard = ({ service }) => {
     const { id, name, description, price, imageUrl, type, workerName, workerCity } = service;
     const navigate = useNavigate();
+    const generateSlug = (text) => {
+        return text.toLowerCase().trim().replace(/ /g, "-").replace(/[^\w-]+/g, "");
+    }
+
+    const slug = generateSlug(service?.name);
+
     return (
         <CustomCard
             header={
@@ -50,7 +56,7 @@ const ServiceCard = ({ service }) => {
                     <p className="text-primary font-bold text-sm px-1 py-0.5">
                         ${Number(price).toLocaleString('es-CO')}
                     </p>
-                    <motion.button whileHover={{ scale: 1.04 }} onClick={() => navigate(`/service/${id}`, { state: { service } })} className="w-full py-2 text-xs font-semibold text-white bg-primary hover:bg-primary-dark hover:cursor-pointer rounded-xl transition-colors">
+                    <motion.button whileHover={{ scale: 1.04 }} onClick={() => navigate(`/service/${slug}/${id}`, { state: { service } })} className="w-full py-2 text-xs font-semibold text-white bg-primary hover:bg-primary-dark hover:cursor-pointer rounded-xl transition-colors">
                         Ver detalles
                     </motion.button>
                 </div>
