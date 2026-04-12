@@ -26,34 +26,43 @@ const HomeCustomerView = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const servicesRes = await getServices();
+      try {
+        const servicesRes = await getServices();
 
-      if (servicesRes.success) {
-        const serviceWithWorker = await Promise.all(
-          servicesRes.services.map(async (s) => {
-            const workerRes = await getWorkersById(s.user_id);
+        if (servicesRes.success) {
+          const serviceWithWorker = await Promise.all(
+            servicesRes.services.map(async (s) => {
+              try {
+                const workerRes = await getWorkersById(s.user_id);
 
-            return {
-              ...s,
-              workerName: workerRes.worker?.name || 'Trabajador',
-              workerCity: workerRes.worker?.city || "Ubicación",
-              workerJob: workerRes.worker?.job || '',
-              workerPhone: workerRes.worker?.phone || '',
-            };
-          })
-        );
+                return {
+                  ...s,
+                  workerName: workerRes.worker?.name || 'Trabajador',
+                  workerCity: workerRes.worker?.city || "Ubicación",
+                  workerJob: workerRes.worker?.job || '',
+                  workerPhone: workerRes.worker?.phone || '',
+                };
+              } catch {
+                return { ...s }
+              }
+            })
+          );
 
-        setServices(serviceWithWorker);
+          setServices(serviceWithWorker);
+        }
+      } catch (error) {
+        console.error("Error cargando servicios:", error);
+      } finally {
+        setLoadingServices(false);
       }
-      setLoadingServices(false);
     };
     fetchData();
   }, []);
 
   const filteredServices = services.filter((s) => {
     const matchSearch =
-      s.name.toLowerCase().includes(search.toLowerCase()) ||
-      s.workerName.toLowerCase().includes(search.toLowerCase());
+      (s.name || '').toLowerCase().includes(search.toLowerCase()) ||
+      (s.workerName || '').toLowerCase().includes(search.toLowerCase());
     const matchCategory = selectedCategory
       ? s.category === selectedCategory
       : true;
@@ -81,12 +90,7 @@ const HomeCustomerView = () => {
         }
       />
 
-      <motion.div initial={{ x: "-100%", opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        exit={{ x: "-100%", opacity: 0 }}
-        transition={{ duration: 0.35 }}
-        className="min-h-screen bg-gray-50 pt-24 pb-16 px-4 md:px-8 lg:px-12"
-      >
+      <div className="min-h-screen bg-gray-50 pt-24 pb-16 px-4 md:px-8 lg:px-12">
         {/* Saludo */}
         <div className="mb-6">
           <h1 className="text-2xl font-semibold text-gray-900">
@@ -147,18 +151,22 @@ const HomeCustomerView = () => {
           </div>
 
           {loadingServices ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <motion.div initial={{ x: "-100%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: "-100%", opacity: 0 }}
+              transition={{ duration: 0.35 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {[1, 2, 3, 4].map((i) => (
                 <ServiceCardSkeleton key={i} />
               ))}
-            </div>
+            </motion.div>
           ) : filteredServices.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <p className="text-sm font-medium text-gray-500">No se encontraron servicios</p>
               <p className="text-xs text-gray-400 mt-1">Intenta con otra categoría o búsqueda</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center sm:justify-items-start">
               {filteredServices.map((s) => (
                 <ServiceCard
                   key={s.id}
@@ -169,7 +177,7 @@ const HomeCustomerView = () => {
           )}
         </div>
 
-      </motion.div>
+      </div>
     </>
   );
 };
