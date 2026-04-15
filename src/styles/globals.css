@@ -46,11 +46,13 @@
 
   /* Solicitudes */
   --color-pending: #f59e0b;
-  --color-pending-bg: #fffbeb;
+  --color-pending-bg: #FEF9C3;
   --color-completed: #22c55e;
-  --color-completed-bg: #f0fdf4;
+  --color-completed-bg: #DCFCE7;
   --color-cancelled: #ef4444;
-  --color-cancelled-bg: #fef2f2;
+  --color-cancelled-bg: #FEE2E2;
+  --color-unknown: #383E4A;
+  --color-unknown-bg: #D3DAE9;
 
 }
 
