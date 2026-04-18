@@ -10,6 +10,7 @@ import RegisterCustomerView from "../screens/Customer/RegisterCustomer/RegisterC
 import AuthRedirectRoute from "../components/AuthRedirectRoute";
 import HomeCustomerView from "@/screens/Customer/Home/HomeCustomerView";
 import ServiceDetailsView from "@/screens/Customer/ServiceDetails/ServiceDetailsView";
+import RequestView from "@/screens/Worker/Request/RequestView";
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -45,6 +46,15 @@ const AnimatedRoutes = () => {
           element={
             <PrivateRoute>
               <HomeWorkerView />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/request"
+          element={
+            <PrivateRoute>
+              <RequestView />
             </PrivateRoute>
           }
         />

@@ -38,9 +38,12 @@ export default function RequestServiceModal({ open, onClose, service, worker }) 
         const response = await createRequest({
             service_id: service.id,
             service_name: service.name,
+            service_type: service.type,
+            service_price: service.price,
             worker_id: service.user_id,
             client_id: user.uid,
             client_name: user.name,
+            client_city: user.city,
             client_phone: user.phone,
             date: form.date,
             time: form.time,

@@ -62,7 +62,7 @@ const HomeWorkerView = () => {
     <>
       <Header
         links={[
-          { name: 'Solicitudes', to: '/' },
+          { name: 'Solicitudes', to: '/request' },
           { name: 'Reservas', to: '/' },
           { name: 'Mis servicios', to: '/' },
         ]}
