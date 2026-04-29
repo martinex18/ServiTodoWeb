@@ -11,6 +11,7 @@ import AuthRedirectRoute from "../components/AuthRedirectRoute";
 import HomeCustomerView from "@/screens/Customer/Home/HomeCustomerView";
 import ServiceDetailsView from "@/screens/Customer/ServiceDetails/ServiceDetailsView";
 import RequestView from "@/screens/Worker/Request/RequestView";
+import Home from "@/screens/Home/home";
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -18,6 +19,12 @@ const AnimatedRoutes = () => {
     <AnimatePresence mode='wait'>
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={
+          <AuthRedirectRoute>
+            <Home />
+          </AuthRedirectRoute>
+        } />
+
+        <Route path="/role" element={
           <AuthRedirectRoute>
             <RoleView />
           </AuthRedirectRoute>
