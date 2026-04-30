@@ -12,9 +12,9 @@
   --font-heading: 'Poppins', sans-serif;
 
   /* Colores principales */
-  --color-primary: #5f8d92;
-  --color-primary-dark: #4a6f73;
-  --color-primary-light: #e8f4f5;
+  --color-primary: #0052CC;
+  --color-primary-dark: #003A99;
+  --color-primary-light: #4C8AFF;
 
   /* Colores base */
   --color-background: #f8f9fa;
@@ -107,7 +107,7 @@
 
   /* Sombra con color primario */
   .shadow-primary {
-    box-shadow: 0 4px 14px rgba(95, 141, 146, 0.3);
+    box-shadow: 0 4px 14px rgba(0, 82, 204, 0.3);
   }
 
   .animate-fade-in{
