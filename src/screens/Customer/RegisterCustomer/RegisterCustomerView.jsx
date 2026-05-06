@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Loader2, Mail, Lock, ChevronLeft, User, Briefcase, IdCard, Phone, MapPin, Calendar, ChevronRight } from "lucide-react";
-import { registerCustomer } from "../../../services/customer/registerCustomer";
+import { registerCustomer } from "../../../services/auth/register/registerCustomer";
 import { getTypeId } from "@/services/getTypeId";
 
 const inputClass = "w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-800 placeholder:text-gray-4000 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all";

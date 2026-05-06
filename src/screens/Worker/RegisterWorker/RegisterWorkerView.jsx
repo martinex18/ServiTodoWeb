@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Loader2, Mail, Lock, ChevronLeft, User, Briefcase, IdCard, Phone, MapPin, Calendar, ChevronRight } from "lucide-react";
-import { registerWorker } from "../../../services/worker/registerWorker";
+import { registerWorker } from "../../../services/auth/register/registerWorker";
 import { getCategories } from "@/services/getCategories.js";
 import { getTypeId } from "@/services/getTypeId.js";
 

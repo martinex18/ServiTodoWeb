@@ -1,18 +1,18 @@
-// src/services/worker/registerWorker.js
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "../../firebaseConfig";
-import { geoCoordinates } from "../utils/geocoding";
+import { auth, db } from "../../../firebaseConfig";
+import { geoCoordinates } from "../../utils/geocoding";
 
 /**
  * Registra un nuevo trabajador.
  * @param {Object} form - Datos del formulario
- */
+*/
 
 export const registerWorker = async (form) => {
+
   let location = null;
+
   try {
-    // Crear usuario con correo y contraseña
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       form.email,
@@ -25,36 +25,48 @@ export const registerWorker = async (form) => {
       console.log("hasLocal:", form.hasLocal);
       console.log("address:", form.address);
       console.log("city:", form.city);
+      console.log("department:", form.department);
+
       try {
         const geoRes = await geoCoordinates(
-          `${form.address}, ${form.city}, Colombia`,
+          `${form.address}, ${form.city}, ${form.department}, Colombia`,
         );
         console.log("geoRes:", geoRes);
         if (geoRes.success) {
           location = geoRes.coordinates;
         }
       } catch {
-        console.warn("No se pudo geocalizar");
+        console.warn("No se pudo geocalizar la direccion");
       }
     }
     console.log("Location a guardar:", location);
 
-    // Guardar datos adicionales en Firestore
-    await setDoc(doc(db, "worker", user.uid), {
+    // Guardar datos en Firestore
+    await setDoc(doc(db, "users", user.uid), {
       name: form.name,
-      type_id: form.type_id,
-      id_number: form.id_number,
-      birthdate: form.birthdate,
-      phone: form.phone,
-      city: form.city,
-      job: form.job,
-      exp: form.exp,
-      hasLocal: form.hasLocal,
-      address: form.address,
       email: form.email,
-      location: location,
+      phone: form.phone,
+      department: form.department,
+      city: form.city,
       role: "worker",
-      createdAt: new Date(),
+
+      workerData: {
+        category: form.category,
+        exp: form.exp,
+        hasLocal: form.hasLocal,
+        address: form.address,
+        isAvailable: true,
+        location: location,
+
+        verification: {
+          typeId: form.type_id,
+          idNumber: form.id_number,
+          status: "pending",
+          veriedAt: null,
+        }
+      },
+
+      createdAt: serverTimestamp(),
     });
 
     return { success: true };
