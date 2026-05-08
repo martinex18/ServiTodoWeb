@@ -15,21 +15,43 @@ const RequestService = () => {
     const [error, setError] = useState('');
     const [step, setStep] = useState(1);
     const [form, setForm] = useState({ service: '', date: '', address: '', name: '', phone: '' });
+    const [loading, setLoading] = useState(false);
+    const [confirmationCode, setConfirmationCode] = useState(null);
 
-    const handleNext = () => {
-        setError('');
+    const handleNext = async () => {
+        try {
+            setLoading(true);
+            setError('');
+            // validar campos completados
+            /*if (!form.service || !form.date || !form.address || !form.phone) {
+                setError("Completa todos los campos para continuar");
+                return;
+            }
+    
+            if (form.phone.length < 10) {
+                setError("Ingresa un número válido");
+                return;
+            }*/
 
-        /*if (!form.service || !form.date || !form.address || !form.phone) {
-            setError("Completa todos los campos para continuar");
-            return;
+            // OTP
+            const result = await sendOTP(
+                `+57${form.phone}`,
+                window.recaptchaVerifier,
+            );
+
+            if (!result.success) {
+                setError("Error enviando OTP: " + result.message);
+                return;
+            }
+
+            setConfirmationCode(result.confirmationCode);
+            setStep(2);
+        } catch (error) {
+            console.error("Error en handleNext: ", error);
+            setError("No se pudo enviar el código de verificación. Intenta nuevamente.");
+        } finally{
+            setLoading(false);
         }
-
-        if (form.phone.length < 10) {
-            setError("Ingresa un número válido");
-            return;
-        }*/
-
-        setStep(2);
     }
 
     return (

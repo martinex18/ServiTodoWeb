@@ -1,27 +1,25 @@
 import { db } from "@/firebaseConfig";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
-export const createRequest = async (data) => {
+export const createRequest = async (form) => {
   try {
     const docRef = await addDoc(collection(db, "requests"), {
-      service_id: data.service_id,
-      service_name: data.service_name,
-      service_type: data.service_type,
-      service_price: data.service_price,
+      clientId: form.clientId,
+      clientName: form.clientName,
+      clientCity: form.clientCity,
+      clientPhone: form.clientPhone,
 
-      worker_id: data.worker_id,
+      serviceDescription: form.serviceDescription,
+      serviceAddress: form.serviceAddress,
+      serviceDate: form.serviceDate,
+      
+      requestType: "direct",
 
-      client_id: data.client_id,
-      client_name: data.client_name,
-      client_city: data.client_city,
-      client_phone: data.client_phone,
+      workerId: null,
 
-      date: data.date,
-      time: data.time,
-      address: data.address,
-      notes: data.notes || "",
-      status: "pendiente",
-      created_at: new Date(),
+      status: "searching",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
     });
 
     return { success: true, id: docRef.id };

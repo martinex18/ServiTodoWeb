@@ -1,17 +1,61 @@
+import { registerCustomer } from "@/services/auth/register/registerCustomer";
+import { verifyOTP } from "@/services/auth/verifyOTP";
+import { createRequest } from "@/services/request/createRequest";
 import { ArrowLeft, ArrowRight, Phone } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const UserVerification = ({ phone, onVerify, onBack }) => {
     const [code, setCode] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-    const handleVerify = () => {
-        if (code.length !== 6) {
-            setError('Ingrese el codigo de 6 digitos');
-            return;
+    const handleVerify = async (code) => {
+        try {
+            setLoading(true);
+            
+            if (code.length !== 6) {
+                setError('Ingrese el codigo de 6 digitos');
+                return;
+            }
+            onVerify(code);
+            setError('');
+
+            // valida OTP
+            const otpResult = await verifyOTP(confirmationCode, code);
+
+            if (!otpResult.success) {
+                setError(otpResult.message);
+                return;
+            }
+
+            // registro de client
+            await registerCustomer(
+                otpResult.user,
+                {
+                    name: form.name,
+                    phone: form.phone,
+                }
+            );
+
+            // registro de solicitud
+            await createRequest({
+                clientId: otpResult.user.uid,
+                clientName: form.name,
+                clientPhone: form.phone,
+
+                serviceDescription: form.service,
+                serviceAddress: form.address,
+                serviceDate: form.date,
+            });
+
+            navigate('/serarching-worker');
+        } catch (error) {
+            setError('Error al verificar el código. Intenta nuevamente.');
+        } finally {
+            setLoading(false);
         }
-        setError('');
-        onVerify(code);
     }
     return (
         <div className="w-full bg-white rounded-2xl shadow-sm border border-gray-100 p-6">

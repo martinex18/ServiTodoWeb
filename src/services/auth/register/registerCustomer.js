@@ -1,30 +1,27 @@
-import { signInWithPhoneNumber } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "../../../firebaseConfig";
+import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../../../firebaseConfig";
 
 /**
  * Registra un nuevo cliente.
  * @param {Object} form - Datos del formulario
  */
 
-export const registerCustomer = async (form) => {
+export const registerCustomer = async (form, user) => {
   try {
-    const userCredential = await signInWithPhoneNumber(
-      auth,
-      form.phone
-    );
-
-    const user = userCredential.user;
+    const userRef = doc(db, "users", user.uid);
+    const userSnapshot = await getDoc(userRef);
 
     // Guardar datos en Firestore
-    await setDoc(doc(db, "users", user.uid), {
-      name: form.name,
-      phone: form.phone,
-      role: "client",
-      isVerified: true,
-      profileCompleted: false,
-      createdAt: serverTimestamp(),
-    });
+    if (!userSnapshot.exists()) {
+      await setDoc(userRef, {
+        name: form.name,
+        phone: form.phone,
+        role: "client",
+        isVerified: true,
+        profileCompleted: false,
+        createdAt: serverTimestamp(),
+      })
+    };
 
     return { success: true };
   } catch (error) {
