@@ -23,7 +23,6 @@ const RequestService = () => {
     const [confirmationResult, setConfirmationResult] = useState(null);
 
     const sortedCategories = [...categories].sort((a, b) => a.name.localeCompare(b.name, "es"));
-    const firstLetter = sortedCategories.map((option) => option.name[0].toUpperCase());
 
     const handleNext = async () => {
         try {
@@ -47,7 +46,7 @@ const RequestService = () => {
             );
 
             if (!result.success) {
-                setError("Error enviando OTP: " + result.message);
+                setError("Error enviando código: " + result.message);
                 return;
             }
 
@@ -63,6 +62,12 @@ const RequestService = () => {
 
     useEffect(() => {
         setupRecaptcha();
+        return () => {
+            if (window.recaptchaVerifier) {
+                window.recaptchaVerifier.clear();
+                window.recaptchaVerifier = null;
+            }
+        };
     }, []);
 
     return (
@@ -81,6 +86,7 @@ const RequestService = () => {
                     </div>
                 }
             />
+            <div id="recaptcha-container"></div>
 
             <div className="min-h-screen bg-gray-50 pb-16 px-4 md:px-8 lg:px-12">
                 <div className="max-w-7xl mx-auto">
@@ -113,7 +119,7 @@ const RequestService = () => {
                                                     <Tag size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                                                     <Autocomplete
                                                         options={sortedCategories}
-                                                        groupBy={(option) =>  option.name[0].toUpperCase()}
+                                                        groupBy={(option) => option.name[0].toUpperCase()}
                                                         getOptionLabel={(option) => option.name}
                                                         value={
                                                             sortedCategories.find((c) => c.id === form.category) || null
@@ -240,7 +246,7 @@ const RequestService = () => {
                                             <p className="text-sm text-error bg-error/10 px-3 py-2 rounded-lg">{error}</p>
                                         )}
                                         <button type="button" className="w-full flex items-center justify-center gap-3 px-5 py-3 bg-green-500 text-white text-sm font-semibold rounded-md hover:bg-green-600 transition-all shadow-sm hover:shadow-md cursor-pointer" onClick={handleNext}>
-                                            {loading ? <> <Loader2 size={18} className="animate-spin"/> Enviando... </> : <> Siguiente <ArrowRight size={18} /> </>}
+                                            {loading ? <> <Loader2 size={18} className="animate-spin" /> Enviando... </> : <> Siguiente <ArrowRight size={18} /> </>}
                                         </button>
                                         <p className="text-sm text-gray-400 text-center">⏱ Toma menos de 1 minuto</p>
 
@@ -290,8 +296,6 @@ const RequestService = () => {
                     </div>
                 </div>
             </div>
-
-            <div id="recaptcha-container"></div>
             <Footer />
         </>
     );
