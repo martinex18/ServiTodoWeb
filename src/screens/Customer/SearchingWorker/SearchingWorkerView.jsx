@@ -1,13 +1,25 @@
 import Footer from "@/components/footer/footer";
 import Header from "@/components/header/header";
 import { Avatar, LinearProgress } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Lottie from "lottie-react";
 import searchingAnimation from "@/assets/animation/Searching.json";
 import { ChevronRight, Headset } from "lucide-react";
+import { cancelRequest } from "@/services/Request/cancelRequest";
 
 const SearchingWorkerView = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const requestId = location.state?.requestId;
+
+    const handleCancel = async () => {
+        const result = await cancelRequest(requestId);
+
+        if(!result.success) {
+            return;
+        }
+        navigate('/request-service');
+    }
 
     return (
         <>
@@ -71,7 +83,7 @@ const SearchingWorkerView = () => {
                         <ChevronRight size={18} className="text-primary shrink-0" />
                     </div>
 
-                    <button className="text-sm text-gray-400 hover:text-red-500 transition-colors cursor-pointer" onClick={() => navigate('/request-service')}>Cancelar búsqueda</button>
+                    <button className="text-sm text-gray-400 hover:text-red-500 transition-colors cursor-pointer" onClick={handleCancel}>Cancelar búsqueda</button>
                 </div>
             </div>
             <Footer />

@@ -3,7 +3,7 @@ import { loginClient } from "@/services/auth/login/loginClient";
 import { registerCustomer } from "@/services/auth/register/registerCustomer";
 import { verifyOTP } from "@/services/auth/verifyOTP";
 import { createRequest } from "@/services/request/createRequest";
-import { ArrowLeft, ArrowRight, Phone } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2, Phone } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -12,6 +12,7 @@ const UserVerification = ({ phone, form, confirmationResult, onBack }) => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
+    const [requestId, setRequestId] = useState(null);
 
     const navigate = useNavigate();
 
@@ -77,6 +78,7 @@ const UserVerification = ({ phone, form, confirmationResult, onBack }) => {
                 setError(requestResult.message);
                 return;
             } else {
+                setRequestId(requestResult.id);
                 setShowSuccess(true);
             }
         } catch (error) {
@@ -114,13 +116,8 @@ const UserVerification = ({ phone, form, confirmationResult, onBack }) => {
             )}
 
             <div className="flex flex-col items-center gap-2">
-                <button
-                    type="button"
-                    onClick={handleVerify}
-                    className="w-full flex items-center justify-center gap-3 px-5 py-3 bg-green-500 text-white text-sm font-semibold rounded-md hover:bg-green-600 transition-all shadow-sm hover:shadow-md cursor-pointer"
-                >
-                    Buscar mi mejor opción
-                    <ArrowRight size={16} />
+                <button type="button" onClick={handleVerify} className="w-full flex items-center justify-center gap-3 px-5 py-3 bg-green-500 text-white text-sm font-semibold rounded-md hover:bg-green-600 transition-all shadow-sm hover:shadow-md cursor-pointer">
+                    {loading ? <> <Loader2 size={18} className="animate-spin" /> </> : "Buscar mi mejor opción"}
                 </button>
 
                 <button type="button" className="w-full flex items-center justify-center gap-2 px-5 py-3 text-sm text-gray-600 bg-gray-50 font-medium rounded-md hover:bg-gray-100 transition cursor-pointer" onClick={onBack}>
@@ -143,7 +140,11 @@ const UserVerification = ({ phone, form, confirmationResult, onBack }) => {
                 buttonText="Continuar"
                 onClose={() => {
                     setShowSuccess(false);
-                    navigate('/searching-worker');
+                    navigate('/searching-worker', {
+                        state: {
+                            requestId: requestId,
+                        },
+                    });
                 }}
             />
         </div>
