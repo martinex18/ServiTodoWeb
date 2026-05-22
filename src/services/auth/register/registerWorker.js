@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { auth, db } from "../../../firebaseConfig";
 import { geoCoordinates } from "../../utils/geocoding";
 
@@ -46,7 +46,7 @@ export const registerWorker = async (form) => {
       name: form.name,
       email: form.email,
       phone: form.phone,
-      department: form.department,
+      department: form.department || null,
       city: form.city,
       role: "worker",
 
