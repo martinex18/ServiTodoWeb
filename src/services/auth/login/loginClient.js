@@ -1,13 +1,9 @@
-import {
-    setDoc, getDoc,
-    setDoc,
-    serverTimestamp,
-} from "firebase/firestore";
+import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 
-export const loginClient = async (confirmation, code) => {
+export const loginClient = async (confirmationResult, code, form) => {
     try {
-        const result = await confirmation.confirm(code);
+        const result = await confirmationResult.confirm(code);
         const client = result.user;
 
         const clientRef = doc(db, "users", client.uid);
@@ -15,6 +11,7 @@ export const loginClient = async (confirmation, code) => {
 
         if (!clientSnap.exists()) {
             await setDoc(clientRef, {
+                name: form.name,
                 phone: client.phoneNumber,
                 role: "client",
                 isVerified: true,
@@ -31,6 +28,7 @@ export const loginClient = async (confirmation, code) => {
             user: { uid: client.uid, ...updatedClientSnap.data() },
         };
     } catch (error) {
+        console.error("Error verificando OTP:", error);
         return {
             success: false,
             message: "Código inválido",
