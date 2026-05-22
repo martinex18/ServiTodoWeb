@@ -1,11 +1,15 @@
 import Footer from "@/components/footer/footer";
 import Header from "@/components/header/header";
-import { LinearProgress } from "@mui/material";
-import { ArrowRight, BadgeCheck, Calendar, MapPin, Medal, Phone, ToolCase, User, Zap } from "lucide-react";
+import { Autocomplete, LinearProgress, TextField } from "@mui/material";
+import { ArrowRight, BadgeCheck, Calendar, FileText, Loader2, MapPin, Medal, Phone, Tag, ToolCase, User, Zap } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserVerification from "./UserVerification";
 import { motion } from "framer-motion";
+import { sendOTP } from "@/services/auth/sendOTP";
+import { useEffect } from "react";
+import { setupRecaptcha } from "@/services/auth/setupRecaptcha";
+import { categories } from "@/services/categories";
 
 const inputClass = "w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-md text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all";
 const labelClass = "block text-sm font-medium text-gray-700 mb-1.5";
@@ -14,24 +18,27 @@ const RequestService = () => {
     const navigate = useNavigate();
     const [error, setError] = useState('');
     const [step, setStep] = useState(1);
-    const [form, setForm] = useState({ service: '', date: '', address: '', name: '', phone: '' });
+    const [form, setForm] = useState({ category: '', service: '', date: '', address: '', notes: '', name: '', phone: '' });
     const [loading, setLoading] = useState(false);
-    const [confirmationCode, setConfirmationCode] = useState(null);
+    const [confirmationResult, setConfirmationResult] = useState(null);
+
+    const sortedCategories = [...categories].sort((a, b) => a.name.localeCompare(b.name, "es"));
+    const firstLetter = sortedCategories.map((option) => option.name[0].toUpperCase());
 
     const handleNext = async () => {
         try {
             setLoading(true);
             setError('');
             // validar campos completados
-            /*if (!form.service || !form.date || !form.address || !form.phone) {
+            if (!form.category || !form.service || !form.date || !form.address || !form.name || !form.phone) {
                 setError("Completa todos los campos para continuar");
                 return;
             }
-    
-            if (form.phone.length < 10) {
+
+            if (form.phone.length !== 10) {
                 setError("Ingresa un número válido");
                 return;
-            }*/
+            }
 
             // OTP
             const result = await sendOTP(
@@ -44,15 +51,19 @@ const RequestService = () => {
                 return;
             }
 
-            setConfirmationCode(result.confirmationCode);
+            setConfirmationResult(result.confirmationResult);
             setStep(2);
         } catch (error) {
             console.error("Error en handleNext: ", error);
             setError("No se pudo enviar el código de verificación. Intenta nuevamente.");
-        } finally{
+        } finally {
             setLoading(false);
         }
-    }
+    };
+
+    useEffect(() => {
+        setupRecaptcha();
+    }, []);
 
     return (
         <>
@@ -97,9 +108,59 @@ const RequestService = () => {
                                     <form className="px-6 py-6 space-y-5">
                                         <div>
                                             <label className={labelClass}>¿Que servicio necesitas?</label>
-                                            <div className="relative">
-                                                <ToolCase size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                                <input className={`${inputClass} text-base py-4`} placeholder="Ej. Necesito un plomero para una fuga" value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })} />
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                <div className="relative">
+                                                    <Tag size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                                    <Autocomplete
+                                                        options={sortedCategories}
+                                                        groupBy={(option) =>  option.name[0].toUpperCase()}
+                                                        getOptionLabel={(option) => option.name}
+                                                        value={
+                                                            sortedCategories.find((c) => c.id === form.category) || null
+                                                        }
+                                                        onChange={(_, value) =>
+                                                            setForm({
+                                                                ...form,
+                                                                category: value?.id || "",
+                                                            })
+                                                        }
+                                                        sx={{
+                                                            "& .MuiOutlinedInput-root": {
+                                                                paddingLeft: "32px",
+                                                                minHeight: "50px",
+                                                                borderRadius: "6px",
+
+                                                                "& fieldset": {
+                                                                    borderColor: "#e5e7eb",
+                                                                },
+
+                                                                "&:hover fieldset": {
+                                                                    borderColor: "#e5e7eb",
+                                                                },
+
+                                                                "&.Mui-focused fieldset": {
+                                                                    borderColor: "border-primary/20",
+                                                                    borderWidth: "2px",
+                                                                },
+                                                            },
+
+                                                            "& .MuiInputBase-input": {
+                                                                fontSize: "0.875rem",
+                                                                color: "#1f2937",
+                                                            },
+                                                        }}
+                                                        renderInput={(params) => (
+                                                            <TextField
+                                                                {...params}
+                                                                placeholder="Selecciona una categoría"
+                                                            />
+                                                        )}
+                                                    />
+                                                </div>
+                                                <div className="relative">
+                                                    <ToolCase size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                                    <input className={`${inputClass} text-base py-4`} placeholder="Ej. Necesito un plomero para una fuga" value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })} />
+                                                </div>
                                             </div>
                                         </div>
 
@@ -134,6 +195,19 @@ const RequestService = () => {
                                         </div>
 
                                         <div>
+                                            <label className={labelClass}>Describa que necesita (opcional)</label>
+                                            <div className="relative">
+                                                <FileText size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                                <textarea
+                                                    placeholder="Ej. Tengo una fuga de agua debajo del lavamanos que empeora cuando uso la ducha"
+                                                    className={inputClass}
+                                                    value={form.notes}
+                                                    onChange={(e) => setForm({ ...form, notes: e.target.value })}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div>
                                             <label className={labelClass}>Nombre</label>
                                             <div className="relative">
                                                 <User size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -152,7 +226,7 @@ const RequestService = () => {
                                             <div className="relative">
                                                 <Phone size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                                                 <input
-                                                    type="text"
+                                                    type="number"
                                                     placeholder="Ej. 312 266 4124"
                                                     className={inputClass}
                                                     value={form.phone}
@@ -166,8 +240,7 @@ const RequestService = () => {
                                             <p className="text-sm text-error bg-error/10 px-3 py-2 rounded-lg">{error}</p>
                                         )}
                                         <button type="button" className="w-full flex items-center justify-center gap-3 px-5 py-3 bg-green-500 text-white text-sm font-semibold rounded-md hover:bg-green-600 transition-all shadow-sm hover:shadow-md cursor-pointer" onClick={handleNext}>
-                                            Siguiente
-                                            <ArrowRight size={18} />
+                                            {loading ? <> <Loader2 size={18} className="animate-spin"/> Enviando... </> : <> Siguiente <ArrowRight size={18} /> </>}
                                         </button>
                                         <p className="text-sm text-gray-400 text-center">⏱ Toma menos de 1 minuto</p>
 
@@ -187,11 +260,9 @@ const RequestService = () => {
                             >
                                 <UserVerification
                                     phone={form.phone}
+                                    form={form}
+                                    confirmationResult={confirmationResult}
                                     onBack={() => setStep(1)}
-                                    onVerify={(code) => {
-                                        console.log('Codigo: ', code);
-                                        //validar codigo
-                                    }}
                                 />
                             </motion.div>
                         </div>
@@ -219,6 +290,8 @@ const RequestService = () => {
                     </div>
                 </div>
             </div>
+
+            <div id="recaptcha-container"></div>
             <Footer />
         </>
     );

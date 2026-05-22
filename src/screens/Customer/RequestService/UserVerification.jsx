@@ -1,3 +1,5 @@
+import SuccessModal from "@/components/modal/SuccessModal";
+import { loginClient } from "@/services/auth/login/loginClient";
 import { registerCustomer } from "@/services/auth/register/registerCustomer";
 import { verifyOTP } from "@/services/auth/verifyOTP";
 import { createRequest } from "@/services/request/createRequest";
@@ -5,53 +7,80 @@ import { ArrowLeft, ArrowRight, Phone } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const UserVerification = ({ phone, onVerify, onBack }) => {
+const UserVerification = ({ phone, form, confirmationResult, onBack }) => {
     const [code, setCode] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+
     const navigate = useNavigate();
 
-    const handleVerify = async (code) => {
+    const handleVerify = async () => {
         try {
             setLoading(true);
-            
+
             if (code.length !== 6) {
                 setError('Ingrese el codigo de 6 digitos');
                 return;
             }
-            onVerify(code);
-            setError('');
 
-            // valida OTP
-            const otpResult = await verifyOTP(confirmationCode, code);
+            const otpResult = await verifyOTP(
+                confirmationResult,
+                code
+            );
 
             if (!otpResult.success) {
                 setError(otpResult.message);
                 return;
             }
 
-            // registro de client
-            await registerCustomer(
-                otpResult.user,
+            const loginResult = await loginClient(
+                confirmationResult,
+                code,
                 {
                     name: form.name,
-                    phone: form.phone,
-                }
+                    phone: `+57${form.phone}`,
+                },
             );
 
+            if (!loginResult.success) {
+                setError(loginResult.message);
+                return;
+            }
+
+            const registerResult = await registerCustomer(
+                {
+                    name: form.name,
+                    phone: `+57${form.phone}`,
+                },
+                otpResult.user
+            );
+
+            if (!registerResult.success) {
+                setError(registerResult.message);
+                return;
+            }
+
             // registro de solicitud
-            await createRequest({
+            const requestResult = await createRequest({
                 clientId: otpResult.user.uid,
                 clientName: form.name,
-                clientPhone: form.phone,
+                clientPhone: `+57${form.phone}`,
 
-                serviceDescription: form.service,
+                serviceCategory: form.category,
+                serviceDescription: form.notes,
                 serviceAddress: form.address,
                 serviceDate: form.date,
             });
 
-            navigate('/serarching-worker');
+            if (!requestResult.success) {
+                setError(requestResult.message);
+                return;
+            } else {
+                setShowSuccess(true);
+            }
         } catch (error) {
+            console.error("Error al verificar el código: ", error);
             setError('Error al verificar el código. Intenta nuevamente.');
         } finally {
             setLoading(false);
@@ -106,6 +135,17 @@ const UserVerification = ({ phone, onVerify, onBack }) => {
                     Reenviar
                 </span>
             </p >
+
+            <SuccessModal 
+                isOpen={showSuccess}
+                title="Solicitud enviada"
+                message="Tu solicitud ha sido enviada exitosamente."
+                buttonText="Continuar"
+                onClose={() => {
+                    setShowSuccess(false);
+                    navigate('/searching-worker');
+                }}
+            />
         </div>
     );
 }
