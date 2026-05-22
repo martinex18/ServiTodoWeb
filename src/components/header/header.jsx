@@ -12,12 +12,12 @@ const Header = ({
             className={`${backgroundColor} sticky top-0 w-full z-50 border-b border-gray-100`}
         >
             <nav
-                className={`mx-auto max-w-7xl flex items-center justify-between p-6 lg:px-8`}
+                className={`mx-auto max-w-7xl flex items-center justify-between px-6 py-3 lg:px-8`}
                 aria-label="Main navigation"
             >
                 {/* Logo */}
                 <Link to="/" className="flex items-center">
-                    <img src={logo} alt="ServiTodo logo" className="h-8 w-auto" />
+                    <img src={logo} alt="ServiTodo logo" className="h-7 w-auto" />
                 </Link>
 
                 {/* Links */}
