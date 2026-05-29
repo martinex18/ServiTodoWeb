@@ -143,6 +143,7 @@ const UserVerification = ({ phone, form, confirmationResult, onBack }) => {
                     navigate('/searching-worker', {
                         state: {
                             requestId: requestId,
+                            category: form.category,
                         },
                     });
                 }}
