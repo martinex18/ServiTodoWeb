@@ -15,18 +15,17 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
             if (firebaseUser) {
-                // Busca rol en 'worker' primero
-                const workerSnap = await getDoc(doc(db, "worker", firebaseUser.uid));
-                if (workerSnap.exists()) {
-                    setUser({ uid: firebaseUser.uid, ...workerSnap.data() });
-                    setRole("worker");
-                } else {
-                    // Si no, busca en 'client'
-                    const clientSnap = await getDoc(doc(db, "client", firebaseUser.uid));
-                    if (clientSnap.exists()) {
-                        setUser({ uid: firebaseUser.uid, ...clientSnap.data() });
-                        setRole("client");
-                    }
+                const userSnap = await getDoc(doc(db, "users", firebaseUser.uid));
+
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+
+                    setUser({
+                        uid: firebaseUser.uid,
+                        ...userData,
+                    });
+
+                    setRole(userData.role);
                 }
             } else {
                 setUser(null);

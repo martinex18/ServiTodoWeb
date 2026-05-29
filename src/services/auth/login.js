@@ -11,35 +11,23 @@ export const login = async (email, password) => {
     );
     const user = userCredential.user;
 
-    // Busca los datos del worker en Firestore
-    const workerRef = doc(db, "worker", user.uid);
-    const workerSnap = await getDoc(workerRef);
+    // Busca los datos del user en Firestore
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
 
-    if (workerSnap.exists()) {
-      const workerData = workerSnap.data();
+    if (!userSnap.exists()) {
       return {
-        success: true,
-        role: "worker",
-        user: { uid: user.uid, ...workerData },
+        success: false,
+        message: "No se encontró el usuario",
       };
     }
 
-    // Busca los datos del customer en Firestore
-    const customerRef = doc(db, "client", user.uid);
-    const customerSnap = await getDoc(customerRef);
-
-    if (customerSnap.exists()) {
-      const customerData = customerSnap.data();
-      return {
-        success: true,
-        role: "client",
-        user: { uid: user.uid, ...customerData },
-      };
-    }
+    const userData = userSnap.data();
 
     return {
-      success: false,
-      message: "No se encontró el usuario",
+      success: true,
+      role: userData.role,
+      user: { uid: user.uid, ...userData },
     };
   } catch (error) {
     console.error("error al iniciar: ", error.code);
