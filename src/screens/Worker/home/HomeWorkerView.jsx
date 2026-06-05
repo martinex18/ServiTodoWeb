@@ -66,11 +66,10 @@ const HomeWorkerView = () => {
           { name: 'Reservas', to: '/' },
           { name: 'Mis servicios', to: '/' },
         ]}
-        backgroundColor='bg-primary'
-        textColor='text-white'
-        position='fixed'
+        backgroundColor='bg-white/70 backdrop-blur-md border-b border-gray-100'
+        textColor='text-gray-600'
         rightContent={
-          <button onClick={handleLogout} className="text-white text-sm font-semibold hover:opacity-70 transition-opacity hover:cursor-pointer">
+          <button onClick={handleLogout} className="text-gray-600 text-sm font-semibold hover:opacity-70 transition-opacity hover:cursor-pointer">
             Cerrar sesion <span aria-hidden="true">&rarr;</span>
           </button>
         }

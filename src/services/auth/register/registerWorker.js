@@ -55,7 +55,7 @@ export const registerWorker = async (form) => {
         exp: form.exp,
         hasLocal: form.hasLocal,
         address: form.address,
-        isAvailable: true,
+        isAvailable: false,
         location: location,
 
         verification: {

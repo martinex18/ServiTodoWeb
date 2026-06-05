@@ -9,6 +9,7 @@ import { ChevronRight, Headset } from "lucide-react";
 import { cancelRequest } from "@/services/Request/cancelRequest";
 import WorkerFound from "@/components/cards/WorkerFound/WorkerFound";
 import { findWorker } from "@/services/worker/findWorker";
+import { sendRequestNotification } from "@/services/whatsapp/sendRequestNotification";
 
 const SearchingWorkerView = () => {
     const navigate = useNavigate();
@@ -16,16 +17,41 @@ const SearchingWorkerView = () => {
     
     const requestId = location.state?.requestId;
     const category = location.state?.category;
+    const description = location.state?.description;
+    const address = location.state?.address;
     const [searchStatus, setSearchStatus] = useState('searching');
     const [worker, setWorker] = useState(null);
+    const [progress, setProgress] = useState(0);
 
     const searchWorker = async () => {
         try {
             setSearchStatus('searching');
+            const interval = setInterval(() => {
+                setProgress((prev) => {
+                    if (prev >= 90) return prev;
+                    return prev + 10;
+                })
+            }, 100);
 
             const result = await findWorker(category);
 
+            if (!result.success || result.workers.length === 0) {
+                setSearchStatus('not-found');
+                return;
+            }
+
+            for (const worker of result.workers) {
+                await sendRequestNotification(
+                    `+57${worker.phone}`,
+                    category,
+                    description,
+                    address,
+                );
+            }
+
             setTimeout(() => {
+                clearInterval(interval);
+                setProgress(100);
                 setWorker(result.workers[0]);
                 setSearchStatus('found');
             }, 3000);
@@ -80,9 +106,9 @@ const SearchingWorkerView = () => {
                         <div className="w-full max-w-md bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
                             <div className="flex items-center justify-between mb-2">
                                 <p className="text-sm font-medium text-primary">Conectando...</p>
-                                <span className="text-xs text-gray-400">80%</span>
+                                <span className="text-xs text-gray-400">{progress}%</span>
                             </div>
-                            <LinearProgress variant="determinate" value={80} />
+                            <LinearProgress variant="determinate" value={progress} />
 
                             <div className="flex items-center gap-3 mt-4">
                                 <div className="p-2 rounded-md bg-blue-200">
