@@ -8,6 +8,7 @@ import { getWorkerServices } from "@/services/worker/getWorkerServices";
 import { DAYS } from "@/services/utils/days";
 import RequestPermissionModal from "@/components/modal/requestPermissionModal";
 import { requestNotification } from "@/services/notifications/requestNotification";
+import CompleteProfileModal from "@/components/modal/CompleteProfileModal";
 
 const typeColors = {}
 
@@ -18,6 +19,7 @@ const HomeWorkerView = () => {
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
   const [openPermissionModal, setOpenPermissionModal] = useState(false);
+  const [openCompleteProfileModal, setOpenCompleteProfileModal] = useState(false);
 
   const fetchServices = async () => {
     const response = await getWorkerServices(user.uid);
@@ -25,7 +27,17 @@ const HomeWorkerView = () => {
     setLoadingServices(false);
   }
 
+  console.log(
+    user?.workerData?.verification?.status
+  );
+
   useEffect(() => {
+    if (user?.workerData?.verification?.status === "pending") {
+      setOpenCompleteProfileModal(true);
+    }
+  }, [user]);
+
+  /*useEffect(() => {
     const int = async () => {
       fetchServices();
 
@@ -41,7 +53,7 @@ const HomeWorkerView = () => {
     }
 
     int();
-  }, [user.uid]);
+  }, [user.uid]); 
 
   const handleAccept = async () => {
     setOpenPermissionModal(false);
@@ -51,7 +63,7 @@ const HomeWorkerView = () => {
   const handleDismiss = () => {
     sessionStorage.setItem('notification_permission_denied', 'true');
     setOpenPermissionModal(false);
-  }
+  } */
 
   const handleLogout = async () => {
     await logout();
@@ -156,7 +168,7 @@ const HomeWorkerView = () => {
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
               <h3 className="text-sm font-semibold text-gray-900 mb-3">Acciones rapidas</h3>
               <div className="space-y-2">
-                <button className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors text-left group">
+                <button className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors text-left group" onClick={() => setOpenCompleteProfileModal(true)}>
                   <div className="w-9 h-9 rounded-xl bg-gray-100 group-hover:bg-primary-light flex items-center justify-center transition-colors">
                     <UserCircle size={16} className="text-gray-500 group-hover:text-primary transition-colors" />
                   </div>
@@ -203,11 +215,14 @@ const HomeWorkerView = () => {
         </div>
       </div>
 
-      <RequestPermissionModal
+      {/* Modales */}
+      <CompleteProfileModal open={openCompleteProfileModal} onClose={() => setOpenCompleteProfileModal(false)} />
+
+      {/* <RequestPermissionModal
         open={openPermissionModal}
         onClose={handleDismiss}
         onAccept={handleAccept}
-      />
+      /> */}
 
       <AddServicesModal
         open={openModal}
