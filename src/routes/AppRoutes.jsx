@@ -15,6 +15,7 @@ import HomeWorkerView from "@/screens/Worker/Home/HomeWorkerView";
 import RequestService from "@/screens/Customer/RequestService/RequestService";
 import ScrollTop from "@/components/scrollTop";
 import SearchingWorkerView from "@/screens/Customer/SearchingWorker/SearchingWorkerView";
+import NotFound from "@/screens/NotFound/NotFound";
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -98,6 +99,10 @@ const AnimatedRoutes = () => {
             </PrivateRoute>
           }
         />
+
+        <Route path="*" element={
+          <NotFound />
+        } />
       </Routes>
     </AnimatePresence>
   )
