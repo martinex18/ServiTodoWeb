@@ -12,7 +12,7 @@ const labelClass = "block text-sm font-medium text-gray-700 mb-1.5";
 const RegisterWorkerView = () => {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const [form, setForm] = useState({ name: '', type_id: '', id_number: '', birthdate: '', phone: '', city: '', category: '', exp: '', hasLocal: false, address: '', email: '', password: '', confirmPassword: '' })
+    const [form, setForm] = useState({ name: '', lastname: '', type_id: '', id_number: '', birthdate: '', phone: '', city: '', category: '', hasLocal: false, address: '', email: '', password: '', confirmPassword: '' })
     let navigate = useNavigate();
 
     const sortedIDs = [...typeIDs].sort((a, b) => a.name.localeCompare(b.name, "es"));
@@ -21,7 +21,7 @@ const RegisterWorkerView = () => {
     const [step, setStep] = useState(1);
 
     const validateForm = () => {
-        if (!form.name || !form.type_id || !form.id_number || !form.birthdate || !form.phone || !form.city || !form.category || !form.exp || !form.email || !form.password || !form.confirmPassword) {
+        if (!form.name || !form.lastname || !form.type_id || !form.id_number || !form.birthdate || !form.phone || !form.city || !form.category || !form.email || !form.password || !form.confirmPassword) {
             setError("Todos los campos son obligatorios.");
             return false;
         }
@@ -88,7 +88,7 @@ const RegisterWorkerView = () => {
 
     const handleNext = () => {
         setError('');
-        if (!form.name || !form.type_id || !form.id_number || !form.birthdate || !form.phone || !form.city || !form.category || !form.exp) {
+        if (!form.name || !form.type_id || !form.id_number || !form.birthdate || !form.phone || !form.city || !form.category) {
             setError("Todos los campos son obligatorios.");
             return false;
         }
@@ -106,7 +106,7 @@ const RegisterWorkerView = () => {
         setLoading(false);
 
         if (response.success) {
-            setForm({ name: '', type_id: '', id_number: '', birthdate: '', phone: '', city: '', category: '', exp: '', hasLocal: false, address: '', email: '', password: '', confirmPassword: '' });
+            setForm({ name: '', lastname: '', type_id: '', id_number: '', birthdate: '', phone: '', city: '', category: '', exp: '', hasLocal: false, address: '', email: '', password: '', confirmPassword: '' });
             navigate('/home-worker');
         } else {
             setError(response.message);
@@ -172,11 +172,21 @@ const RegisterWorkerView = () => {
                     <form onSubmit={handleRegister} className="space-y-4">
                         {step === 1 && (
                             <>
-                                <div>
-                                    <label className={labelClass}>Nombre completo / Negocio</label>
-                                    <div className="relative">
-                                        <User size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                        <input type="text" placeholder="Nombre" name="Nombre" className={inputClass} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                                <div className = "lg:flex items-center justify-between gap-3">
+                                    <div>
+                                        <label className={labelClass}>Nombre</label>
+                                        <div className="relative">
+                                            <User size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                            <input type="text" placeholder="Nombre" name="Nombre" className={inputClass} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className={labelClass}>Apellido</label>
+                                        <div className="relative">
+                                            <User size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                            <input type="text" placeholder="Apellido" name="Apellido" className={inputClass} value={form.lastname} onChange={(e) => setForm({ ...form, lastname: e.target.value })} />
+                                        </div>
                                     </div>
                                 </div>
 
@@ -216,7 +226,7 @@ const RegisterWorkerView = () => {
                                     <label className={labelClass}>Numero de telefono</label>
                                     <div className="relative">
                                         <Phone size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                        <input placeholder="30000000" className={inputClass} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+                                        <input placeholder="300 000 000" className={inputClass} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
                                     </div>
                                 </div>
 
@@ -228,7 +238,7 @@ const RegisterWorkerView = () => {
                                     </div>
                                 </div>
 
-                                <div className="lg:flex items-center justify-between gap-3">
+                                <div className="">
                                     <div>
                                         <label className={labelClass}>Tipo de servicio</label>
                                         <div className="relative">
@@ -278,14 +288,6 @@ const RegisterWorkerView = () => {
                                                     />
                                                 )}
                                             />
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label className={labelClass}>Años de experiencia</label>
-                                        <div className="relative">
-                                            <Briefcase size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                            <input type="text" placeholder="2 años" className={inputClass} value={form.exp} onChange={(e) => setForm({ ...form, exp: e.target.value })} />
                                         </div>
                                     </div>
                                 </div>

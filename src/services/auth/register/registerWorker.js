@@ -25,11 +25,10 @@ export const registerWorker = async (form) => {
       console.log("hasLocal:", form.hasLocal);
       console.log("address:", form.address);
       console.log("city:", form.city);
-      console.log("department:", form.department);
 
       try {
         const geoRes = await geoCoordinates(
-          `${form.address}, ${form.city}, ${form.department}, Colombia`,
+          `${form.address}, ${form.city}, Colombia`,
         );
         console.log("geoRes:", geoRes);
         if (geoRes.success) {
@@ -44,15 +43,14 @@ export const registerWorker = async (form) => {
     // Guardar datos en Firestore
     await setDoc(doc(db, "users", user.uid), {
       name: form.name,
+      lastname: form.lastname,
       email: form.email,
       phone: form.phone,
-      department: form.department || null,
       city: form.city,
       role: "worker",
 
       workerData: {
         category: form.category,
-        exp: form.exp,
         hasLocal: form.hasLocal,
         address: form.address,
         isAvailable: false,
@@ -62,7 +60,7 @@ export const registerWorker = async (form) => {
           typeId: form.type_id,
           idNumber: form.id_number,
           status: "pending",
-          veriedAt: null,
+          verifiedAt: null,
         }
       },
 
