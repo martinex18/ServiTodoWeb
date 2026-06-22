@@ -4,6 +4,8 @@ import { motion } from "framer-motion"
 import { useAuth } from "@/context/AuthContext";
 import { useDropzone } from "react-dropzone";
 import { uploadImage } from "@/services/cloudinary/uploadImage.js";
+import { updateDoc, doc } from "firebase/firestore";
+import { db } from "@/firebaseConfig";
 
 import { categories } from "@/services/categories";
 import { typeIDs } from "@/services/typeIDs";
@@ -17,8 +19,8 @@ export default function CompleteProfileModal({ open, onClose }) {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const { user } = useAuth();
-    const [imagen, setImagen] = useState('');
-    const [imagenPreview, setImagenPreview] = useState('');
+    const [profileImage, setProfileImage] = useState('');
+    const [profileImagePreview, setProfileImagePreview] = useState('');
 
     const [idType, setIdType] = useState("images");
 
@@ -34,7 +36,7 @@ export default function CompleteProfileModal({ open, onClose }) {
         lastname: '',
         category: '',
         exp: '',
-        type_id: '',
+        typeId: '',
         idNumber: '',
         biography: ''
     });
@@ -44,8 +46,8 @@ export default function CompleteProfileModal({ open, onClose }) {
         maxFiles: 1,
         onDrop: (acceptedFiles) => {
             const file = acceptedFiles[0];
-            setImagen(file);
-            setImagenPreview(URL.createObjectURL(file));
+            setProfileImage(file);
+            setProfileImagePreview(URL.createObjectURL(file));
         }
     });
 
@@ -55,7 +57,7 @@ export default function CompleteProfileModal({ open, onClose }) {
                 name: user.name || "",
                 lastname: user.lastname || "",
                 category: categories.find((c) => c.id === user.workerData.category)?.name || "",
-                type_id: typeIDs.find((t) => t.id === user.workerData.verification.typeId)?.name || "",
+                typeId: typeIDs.find((t) => t.id === user.workerData.verification.typeId)?.name || "",
                 idNumber: user.workerData.verification.idNumber || "",
             });
         }
@@ -64,7 +66,7 @@ export default function CompleteProfileModal({ open, onClose }) {
     const handleUpdate = async (e) => {
         e.preventDefault();
 
-        if (!imagen || !form.name || !form.lastname || !form.category || !form.exp || !form.type_id || !form.idNumber || !form.biography) {
+        if (!profileImage || !form.name || !form.lastname || !form.category || !form.exp || !form.typeId || !form.idNumber || !form.biography) {
             setError("Todos los campos son obligatorios");
             setLoading(false);
             return;
@@ -76,32 +78,46 @@ export default function CompleteProfileModal({ open, onClose }) {
             return;
         }
 
-        if (!imagen) {
+        if (!profileImage) {
             setError('La foto de perfil es obligatoria')
             setLoading(false);
             return;
         }
 
-        let imageUrl = '';
-        if (imagen) {
-            const imageRes = await uploadImage(imagen);
-            if (imageRes.success) {
-                imageUrl = imageRes.url;
-            } else {
-                setError('Error subiendo la imagen.');
-                setLoading(false);
-                return;
-            }
+        if (idType === "images" && (!frontImage || !backImage)) {
+            setError('Debes subir el frente y reverso de la identificación')
+            setLoading(false);
+            return;
         }
-        console.log('imageUrl:', imageUrl);
 
-        /*if (response.success) {
-            setForm({ name: "", exp: "", biography: ""});
-            onClose();
-            resetForm();
-        } else {
-            setError(response.message);
-        } */
+        setError("");
+        setLoading(true);
+
+        const workerFolder = `servitodo/workers/${form.idNumber}`;
+
+        const profileResult = await uploadImage(profileImage, `${workerFolder}/profile`);
+        const frontResult = await uploadImage(frontImage, `${workerFolder}/verification`);
+        const backResult = await uploadImage(backImage, `${workerFolder}/verification`);
+
+        if (!profileResult.success || !frontResult.success || !backResult.success) {
+            setError("Error subiendo las imágenes. Por favor intenta de nuevo.");
+            setLoading(false);
+            return;
+        }
+
+        await updateDoc(doc(db, "users", user.uid), {
+            name: form.name,
+            lastname: form.lastname,
+            "workerData.exp": form.exp,
+            "workerData.biography": form.biography,
+            "photoUrl": profileResult.url,
+            "workerData.verification.frontImage": frontResult.url,
+            "workerData.verification.backImage": backResult.url,
+            "workerData.verification.status": "reviewing",
+        });
+
+        setLoading(false);
+        onClose();
     }
 
     if (!open) return null;
@@ -132,10 +148,10 @@ export default function CompleteProfileModal({ open, onClose }) {
                 <form className="px-6 py-5 space-y-4 overflow-y-auto">
                     {/* Imagen */}
                     <div className="bg-gray-50 border-2 border-gray-200 rounded-xl p-4">
-                        {imagenPreview ? (
+                        {profileImagePreview ? (
                             <div className="relative">
-                                <img src={imagenPreview} alt="Preview" className="w-32 h-32 object-cover rounded-full" />
-                                <button type="button" onClick={() => { setImagen(null); setImagenPreview(null); }} className="absolute top-2 right-2 p-1 bg-white rounded-full shadow text-gray-500 hover:text-error transition-colors">
+                                <img src={profileImagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-full" />
+                                <button type="button" onClick={() => { setProfileImage(null); setProfileImagePreview(null); }} className="absolute top-2 right-2 p-1 bg-white rounded-full shadow text-gray-500 hover:text-error transition-colors">
                                     <X size={16} />
                                 </button>
                             </div>
@@ -161,7 +177,7 @@ export default function CompleteProfileModal({ open, onClose }) {
                                     <label className="flex-1 flex items-center justify-center gap-2 py-2 border border-gray-200 rounded-xl text-xs font-medium text-gray-600 hover:bg-gray-50 cursor-pointer transition-colors">
                                         <input type="file" accept="image/*" className="hidden" onChange={(e) => {
                                             const file = e.target.files[0];
-                                            if (file) { setImagen(file); setImagenPreview(URL.createObjectURL(file)); }
+                                            if (file) { setProfileImage(file); setProfileImagePreview(URL.createObjectURL(file)); }
                                         }} />
                                         <FolderOpen size={14} />
                                         Seleccionar foto
@@ -171,7 +187,7 @@ export default function CompleteProfileModal({ open, onClose }) {
                                     <label className="flex-1 flex items-center justify-center gap-2 py-2 border border-gray-200 rounded-xl text-xs font-medium text-gray-600 hover:bg-gray-50 cursor-pointer transition-colors sm:hidden">
                                         <input type="file" accept="image/*" capture='environment' className="hidden" onChange={(e) => {
                                             const file = e.target.files[0];
-                                            if (file) { setImagen(file); setImagenPreview(URL.createObjectURL(file)); }
+                                            if (file) { setProfileImage(file); setProfileImagePreview(URL.createObjectURL(file)); }
                                         }} />
                                         <Camera size={14} />
                                         Tomar foto
@@ -335,6 +351,7 @@ export default function CompleteProfileModal({ open, onClose }) {
                                         onChange={(e) => {
                                             const file = e.target.files[0];
                                             if (file) {
+                                                setFrontImage(file);
                                                 setFrontPreview(URL.createObjectURL(file));
                                             }
                                         }}
@@ -377,6 +394,7 @@ export default function CompleteProfileModal({ open, onClose }) {
                                         onChange={(e) => {
                                             const file = e.target.files[0];
                                             if (file) {
+                                                setBackImage(file);
                                                 setBackPreview(URL.createObjectURL(file));
                                             }
                                         }}

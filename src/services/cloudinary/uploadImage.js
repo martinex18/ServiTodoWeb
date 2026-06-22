@@ -1,4 +1,4 @@
-export const uploadImage = async (file) => {
+export const uploadImage = async (file, folder) => {
   try {
     const formData = new FormData();
     // se agrega el archivo de imagen al formulario
@@ -7,6 +7,7 @@ export const uploadImage = async (file) => {
       "upload_preset",
       import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
     );
+    formData.append("folder", folder);
 
     const response = await fetch(
       `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
