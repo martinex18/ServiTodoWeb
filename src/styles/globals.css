@@ -45,6 +45,7 @@
   --color-local-bg: #f5f3ff;
 
   /* Solicitudes */
+  --color-verified: #3b82f6;
   --color-pending: #f59e0b;
   --color-pending-bg: #FEF9C3;
   --color-completed: #22c55e;
