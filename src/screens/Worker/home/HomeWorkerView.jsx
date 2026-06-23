@@ -9,6 +9,7 @@ import { DAYS } from "@/services/utils/days";
 import RequestPermissionModal from "@/components/modal/requestPermissionModal";
 import { requestNotification } from "@/services/notifications/requestNotification";
 import CompleteProfileModal from "@/components/modal/CompleteProfileModal";
+import WarningModal from "@/components/modal/WarningModal";
 
 const typeColors = {}
 
@@ -20,6 +21,7 @@ const HomeWorkerView = () => {
   const navigate = useNavigate();
   const [openPermissionModal, setOpenPermissionModal] = useState(false);
   const [openCompleteProfileModal, setOpenCompleteProfileModal] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
 
   const statusType = {
     verified: {
@@ -38,13 +40,13 @@ const HomeWorkerView = () => {
       bg: "bg-pending",
     },
   };
-  
+
   let userStatus = user?.workerData?.verification?.status;
   const statusConfig = statusType[userStatus];
 
   useEffect(() => {
     if (userStatus === "pending") {
-      setOpenCompleteProfileModal(true);
+      setShowWarning(true);
     }
   }, [userStatus]);
 
@@ -92,8 +94,8 @@ const HomeWorkerView = () => {
       <Header
         links={[
           { name: 'Solicitudes', to: '/request' },
-          { name: 'Reservas', to: '/' },
-          { name: 'Mis servicios', to: '/' },
+          { name: 'Reservas', to: '/q' },
+          { name: 'Mis servicios', to: '/w' },
         ]}
         backgroundColor='bg-white/70 backdrop-blur-md border-b border-gray-100'
         textColor='text-gray-600'
@@ -241,7 +243,25 @@ const HomeWorkerView = () => {
       </div>
 
       {/* Modales */}
-      <CompleteProfileModal open={openCompleteProfileModal} onClose={() => setOpenCompleteProfileModal(false)} />
+      <WarningModal
+        isOpen={showWarning}
+        title="Completa tu perfil"
+        message="Debes completar y enviar tu información para verificación. Mientras tu perfil no sea revisado, no podrás recibir solicitudes de clientes."
+        buttonText="Completar perfil"
+        buttonClose="No por ahora"
+        open={() => {
+          setShowWarning(false);
+          setOpenCompleteProfileModal(true);
+        }}
+        onClose={() => setShowWarning(false)}
+      />
+
+      <CompleteProfileModal
+        open={openCompleteProfileModal}
+        onClose={() => {
+          setOpenCompleteProfileModal(false);
+        }}
+      />
 
       {/* <RequestPermissionModal
         open={openPermissionModal}
