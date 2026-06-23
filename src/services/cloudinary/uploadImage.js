@@ -18,8 +18,6 @@ export const uploadImage = async (file, folder) => {
     );
 
     const data = await response.json();
-    console.log("Cloudinary response:", data);
-    console.log("preset:", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
 
     if (data.secure_url) {
       return { success: true, url: data.secure_url };

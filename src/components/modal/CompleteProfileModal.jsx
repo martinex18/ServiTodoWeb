@@ -120,6 +120,10 @@ export default function CompleteProfileModal({ open, onClose }) {
         onClose();
     }
 
+    const handleClose = () => {
+        onClose();
+    }
+
     if (!open) return null;
     return (
         <motion.div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 px-4"
@@ -137,7 +141,7 @@ export default function CompleteProfileModal({ open, onClose }) {
                     </div>
                     <button
                         type="button"
-                        onClick={onClose}
+                        onClick={handleClose}
                         className="p-2 rounded-xl hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
                     >
                         <X size={20} />
@@ -205,7 +209,7 @@ export default function CompleteProfileModal({ open, onClose }) {
                             <input
                                 type="text"
                                 className={inputClass}
-                                value={form.name}
+                                value={form.name || ""}
                                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                             />
                         </div>
@@ -214,7 +218,7 @@ export default function CompleteProfileModal({ open, onClose }) {
                             <input
                                 type="text"
                                 className={inputClass}
-                                value={form.lastname}
+                                value={form.lastname || ""}
                                 onChange={(e) => setForm({ ...form, lastname: e.target.value })}
                             />
                         </div>
@@ -238,7 +242,7 @@ export default function CompleteProfileModal({ open, onClose }) {
                                 type="number"
                                 placeholder="5"
                                 className={inputClass}
-                                value={form.exp}
+                                value={form.exp || ""}
                                 onChange={(e) => setForm({ ...form, exp: e.target.value })}
                             />
                         </div>
@@ -264,8 +268,8 @@ export default function CompleteProfileModal({ open, onClose }) {
                                     type="text"
                                     placeholder="5"
                                     className={inputClassDisabled}
-                                    value={form.type_id}
-                                    onChange={(e) => setForm({ ...form, type_id: e.target.value })}
+                                    value={form.typeId}
+                                    onChange={(e) => setForm({ ...form, typeId: e.target.value })}
                                     disabled
                                 />
                             </div>
@@ -478,6 +482,7 @@ export default function CompleteProfileModal({ open, onClose }) {
                         <button
                             type="button"
                             className="px-5 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
+                            onClick={handleClose}
                         >
                             Cancelar
                         </button>
