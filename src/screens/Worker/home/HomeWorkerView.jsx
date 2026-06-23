@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { EditIcon, Plus, Briefcase, ChevronRight, Tag, UserCircle, CircleCheck, Clock } from 'lucide-react';
+import { Plus, Briefcase, ChevronRight, Tag, UserCircle, CircleCheck, Clock } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../../context/AuthContext'
 import Header from "../../../components/header/header";
@@ -10,6 +10,7 @@ import RequestPermissionModal from "@/components/modal/requestPermissionModal";
 import { requestNotification } from "@/services/notifications/requestNotification";
 import CompleteProfileModal from "@/components/modal/CompleteProfileModal";
 import WarningModal from "@/components/modal/WarningModal";
+import ActionButton from "@/components/buttons/ActionButton";
 
 const typeColors = {}
 
@@ -194,27 +195,14 @@ const HomeWorkerView = () => {
               <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
                 <h3 className="text-sm font-semibold text-gray-900 mb-3">Acciones rapidas</h3>
                 <div className="space-y-2">
-                  <button className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors text-left group" onClick={() => setOpenCompleteProfileModal(true)}>
-                    <div className="w-9 h-9 rounded-xl bg-gray-100 group-hover:bg-primary-light flex items-center justify-center transition-colors">
-                      <UserCircle size={16} className="text-gray-500 group-hover:text-primary transition-colors" />
-                    </div>
-                    <span className="text-sm font-medium text-gray-700">Editar mi perfil</span>
-                  </button>
-                  <button className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors text-left group">
-                    <div className="w-9 h-9 rounded-xl bg-gray-100 group-hover:bg-primary-light flex items-center justify-center transition-colors">
-                      <EditIcon size={16} className="text-gray-500 group-hover:text-primary transition-colors" />
-                    </div>
-                    <span className="text-sm font-medium text-gray-700">Gestionar mis servicios</span>
-                  </button>
-                  <button
-                    onClick={() => setOpenModal(true)}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors text-left group"
-                  >
-                    <div className="w-9 h-9 rounded-xl bg-gray-100 group-hover:bg-primary-light flex items-center justify-center transition-colors">
-                      <Plus size={16} className="text-gray-500 group-hover:text-primary transition-colors" />
-                    </div>
-                    <span className="text-sm font-medium text-gray-700">Ofrecer un servicio</span>
-                  </button>
+                  <ActionButton icon={UserCircle} title="Editar perfil" />
+
+                  <ActionButton icon={Plus} title="Agregar un servicio" onClick={() => setOpenModal(true)} />
+
+                  {/* Boton verificar perfil */}
+                  {userStatus === "pending" && (
+                    <ActionButton icon={CircleCheck} title="Verificar perfil" onClick={() => setOpenCompleteProfileModal(true)} />
+                  )}
                 </div>
               </div>
 
