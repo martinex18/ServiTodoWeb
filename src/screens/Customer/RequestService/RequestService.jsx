@@ -7,8 +7,6 @@ import { useNavigate } from "react-router-dom";
 import UserVerification from "./UserVerification";
 import { motion } from "framer-motion";
 import { sendOTP } from "@/services/auth/sendOTP";
-import { useEffect } from "react";
-import { setupRecaptcha } from "@/services/auth/setupRecaptcha";
 import { categories } from "@/services/categories";
 
 const inputClass = "w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-md text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all";
@@ -20,7 +18,6 @@ const RequestService = () => {
     const [step, setStep] = useState(1);
     const [form, setForm] = useState({ category: '', service: '', date: '', address: '', notes: '', name: '', phone: '' });
     const [loading, setLoading] = useState(false);
-    const [confirmationResult, setConfirmationResult] = useState(null);
 
     const sortedCategories = [...categories].sort((a, b) => a.name.localeCompare(b.name, "es"));
 
@@ -28,7 +25,9 @@ const RequestService = () => {
         try {
             setLoading(true);
             setError('');
-            // validar campos completados
+            
+            if (loading) return;
+
             if (!form.category || !form.service || !form.date || !form.address || !form.name || !form.phone) {
                 setError("Completa todos los campos para continuar");
                 return;
@@ -42,33 +41,23 @@ const RequestService = () => {
             // OTP
             const result = await sendOTP(
                 `+57${form.phone}`,
-                window.recaptchaVerifier,
             );
+            console.log("result: ", result);
 
             if (!result.success) {
                 setError("Error enviando código: " + result.message);
                 return;
             }
 
-            setConfirmationResult(result.confirmationResult);
             setStep(2);
+
         } catch (error) {
             console.error("Error en handleNext: ", error);
-            setError("No se pudo enviar el código de verificación. Intenta nuevamente.");
+            setError("No se pudo enviar el código de verificación.");
         } finally {
             setLoading(false);
         }
     };
-
-    useEffect(() => {
-        setupRecaptcha();
-        return () => {
-            if (window.recaptchaVerifier) {
-                window.recaptchaVerifier.clear();
-                window.recaptchaVerifier = null;
-            }
-        };
-    }, []);
 
     return (
         <>
@@ -245,7 +234,12 @@ const RequestService = () => {
                                         {error && (
                                             <p className="text-sm text-error bg-error/10 px-3 py-2 rounded-lg">{error}</p>
                                         )}
-                                        <button type="button" className="w-full flex items-center justify-center gap-3 px-5 py-3 bg-green-500 text-white text-sm font-semibold rounded-md hover:bg-green-600 transition-all shadow-sm hover:shadow-md cursor-pointer" onClick={handleNext}>
+                                        <button
+                                            type="button"
+                                            className="w-full flex items-center justify-center gap-3 px-5 py-3 bg-green-500 text-white text-sm font-semibold rounded-md hover:bg-green-600 transition-all shadow-sm hover:shadow-md cursor-pointer"
+                                            onClick={handleNext}
+                                            disabled={loading}
+                                        >
                                             {loading ? <> <Loader2 size={18} className="animate-spin" /> Enviando... </> : <> Siguiente <ArrowRight size={18} /> </>}
                                         </button>
                                         <p className="text-sm text-gray-400 text-center">⏱ Toma menos de 1 minuto</p>
@@ -267,7 +261,6 @@ const RequestService = () => {
                                 <UserVerification
                                     phone={form.phone}
                                     form={form}
-                                    confirmationResult={confirmationResult}
                                     onBack={() => setStep(1)}
                                 />
                             </motion.div>

@@ -1,14 +1,25 @@
-import { auth } from "@/firebaseConfig"
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth"
 import { firebaseErrorMessage } from "../utils/firebaseErrorMessage";
 
-export const sendOTP = async (phone, recaptchaVerifier) => {
+const API_URL = import.meta.env.VITE_API_URL;
+
+export const sendOTP = async (phone) => {
     try{
-        const confirmationResult = await signInWithPhoneNumber(
-            auth, phone, recaptchaVerifier,
+        const response = await fetch(
+            `${API_URL}/send-otp`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    phone,
+                }),
+            }
         );
 
-        return { success: true, confirmationResult };
+        const data = await response.json();
+        return data;
+        
     } catch (error) {
         console.error(error);
         return { success: false, message: firebaseErrorMessage(error.code) };

@@ -1,5 +1,4 @@
 import SuccessModal from "@/components/modal/SuccessModal";
-import { loginClient } from "@/services/auth/login/loginClient";
 import { registerCustomer } from "@/services/auth/register/registerCustomer";
 import { verifyOTP } from "@/services/auth/verifyOTP";
 import { createRequest } from "@/services/request/createRequest";
@@ -7,7 +6,7 @@ import { ArrowLeft, ArrowRight, Loader2, Phone } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const UserVerification = ({ phone, form, confirmationResult, onBack }) => {
+const UserVerification = ({ phone, form, onBack }) => {
     const [code, setCode] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -21,12 +20,12 @@ const UserVerification = ({ phone, form, confirmationResult, onBack }) => {
             setLoading(true);
 
             if (code.length !== 6) {
-                setError('Ingrese el codigo de 6 digitos');
+                setError('Ingrese el código de 6 dígitos');
                 return;
             }
 
             const otpResult = await verifyOTP(
-                confirmationResult,
+                `+57${form.phone}`,
                 code
             );
 
@@ -35,27 +34,10 @@ const UserVerification = ({ phone, form, confirmationResult, onBack }) => {
                 return;
             }
 
-            const loginResult = await loginClient(
-                confirmationResult,
-                code,
-                {
-                    name: form.name,
-                    phone: `+57${form.phone}`,
-                },
-            );
-
-            if (!loginResult.success) {
-                setError(loginResult.message);
-                return;
-            }
-
-            const registerResult = await registerCustomer(
-                {
-                    name: form.name,
-                    phone: `+57${form.phone}`,
-                },
-                otpResult.user
-            );
+            const registerResult = await registerCustomer({
+                name: form.name,
+                phone: `+57${form.phone}`,
+            });
 
             if (!registerResult.success) {
                 setError(registerResult.message);
@@ -64,7 +46,7 @@ const UserVerification = ({ phone, form, confirmationResult, onBack }) => {
 
             // registro de solicitud
             const requestResult = await createRequest({
-                clientId: otpResult.user.uid,
+                clientId: registerResult.user.id,
                 clientName: form.name,
                 clientPhone: `+57${form.phone}`,
 
