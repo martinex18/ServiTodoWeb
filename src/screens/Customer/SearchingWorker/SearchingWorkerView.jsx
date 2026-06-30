@@ -10,16 +10,17 @@ import { cancelRequest } from "@/services/Request/cancelRequest";
 import WorkerFound from "@/components/cards/WorkerFound/WorkerFound";
 import { findWorker } from "@/services/worker/findWorker";
 import { sendRequestNotification } from "@/services/whatsapp/sendRequestNotification";
+import WorkerNotFound from "@/components/cards/WorkerNotFound/WokerNotFound";
 
 const SearchingWorkerView = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    
+
     const requestId = location.state?.requestId;
     const category = location.state?.category;
     const description = location.state?.description;
     const address = location.state?.address;
-    const [searchStatus, setSearchStatus] = useState('searching');
+    const [searchStatus, setSearchStatus] = useState('');
     const [worker, setWorker] = useState(null);
     const [progress, setProgress] = useState(0);
 
@@ -143,6 +144,7 @@ const SearchingWorkerView = () => {
             )}
 
             {searchStatus === 'found' && <WorkerFound worker={worker} />}
+            {searchStatus === 'not-found' && <WorkerNotFound />}
             <Footer />
         </>
     );
