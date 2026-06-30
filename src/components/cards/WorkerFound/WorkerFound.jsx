@@ -1,4 +1,5 @@
 import { BadgeCheck, MapPin, Shield, Star } from "lucide-react";
+const DEFAULT_IMG_WORKER = 'assets/imagenes/default_img_worker.png';
 
 const WorkerFound = ({ worker }) => {
     return (
@@ -11,9 +12,12 @@ const WorkerFound = ({ worker }) => {
                 {/* Imagen */}
                 <div className="md:w-2/5 h-64 md:h-auto">
                     <img
-                        src="https://www.cafedelescritor.com/wp-content/uploads/fotos-calidad-gratis.jpg"
-                        alt="Foto del trabajador"
+                        src={worker?.photoUrl || DEFAULT_IMG_WORKER}
+                        alt="Foto de perfil del trabajador"
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                            e.target.src = DEFAULT_IMG_WORKER;
+                        }}
                     />
                 </div>
                 {/* Información */}
@@ -21,7 +25,7 @@ const WorkerFound = ({ worker }) => {
                     <div className="flex flex-col">
                         <div className="flex items-center justify-between">
                             <h2 className="text-xl font-semibold text-gray-900">
-                                {worker?.name}
+                                {worker?.name || "-"}
                             </h2>
 
                             <div className="flex items-center gap-2 mt-2 bg-gray-200 px-2 py-0.5 rounded-md">
@@ -31,17 +35,16 @@ const WorkerFound = ({ worker }) => {
                         </div>
 
                         <p className="text-primary font-medium">
-                            {worker?.workerData?.category}
+                            {worker?.workerData?.category || "-"}
                         </p>
 
                         <div className="flex items-center gap-2 text-gray-500 mt-2">
                             <MapPin size={16} />
-                            <span>{worker?.city}</span>
+                            <span>{worker?.city || "-"}</span>
                         </div>
 
                         <p className="text-gray-600 mt-4 leading-relaxed">
-                            Especialista en reparación de fugas, instalación de sanitarios
-                            y mantenimiento residencial con más de 5 años de experiencia.
+                            {worker?.workerData?.biography || "-"}
                         </p>
                     </div>
 
