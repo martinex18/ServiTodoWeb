@@ -22,27 +22,11 @@ const AnimatedRoutes = () => {
   return (
     <AnimatePresence mode='wait'>
       <Routes location={location} key={location.pathname}>
+
+        {/* AuthRedirectRoutes */}
         <Route path="/" element={
           <AuthRedirectRoute>
             <Home />
-          </AuthRedirectRoute>
-        } />
-
-        <Route path="/request-service" element={
-          <AuthRedirectRoute>
-            <RequestService />
-          </AuthRedirectRoute>
-        } />
-
-        <Route path="/searching-worker" element={
-          <AuthRedirectRoute>
-            <SearchingWorkerView />
-          </AuthRedirectRoute>
-        } />
-
-        <Route path="/role" element={
-          <AuthRedirectRoute>
-            <RoleView />
           </AuthRedirectRoute>
         } />
 
@@ -64,6 +48,34 @@ const AnimatedRoutes = () => {
           </AuthRedirectRoute>
         } />
 
+        <Route path="/role" element={
+          <AuthRedirectRoute>
+            <RoleView />
+          </AuthRedirectRoute>
+        } />
+
+        <Route path="/request-service" element={
+          <AuthRedirectRoute>
+            <RequestService />
+          </AuthRedirectRoute>
+        } />
+
+        <Route path="/searching-worker" element={
+          <AuthRedirectRoute>
+            <SearchingWorkerView />
+          </AuthRedirectRoute>
+        } />
+
+        {/* Private Routes */}
+        <Route
+          path="/home-customer"
+          element={
+            <PrivateRoute>
+              <HomeCustomerView />
+            </PrivateRoute>
+          }
+        />
+
         <Route
           path="/home-worker"
           element={
@@ -78,15 +90,6 @@ const AnimatedRoutes = () => {
           element={
             <PrivateRoute>
               <RequestView />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/home-customer"
-          element={
-            <PrivateRoute>
-              <HomeCustomerView />
             </PrivateRoute>
           }
         />
