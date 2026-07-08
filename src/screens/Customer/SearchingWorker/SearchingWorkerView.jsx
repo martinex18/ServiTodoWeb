@@ -8,63 +8,43 @@ import searchingAnimation from "@/assets/animation/Searching.json";
 import { ChevronRight, Headset } from "lucide-react";
 import { cancelRequest } from "@/services/Request/cancelRequest";
 import WorkerFound from "@/components/cards/WorkerFound/WorkerFound";
-import { findWorker } from "@/services/worker/findWorker";
-import { sendRequestNotification } from "@/services/whatsapp/sendRequestNotification";
 import WorkerNotFound from "@/components/cards/WorkerNotFound/WokerNotFound";
+import { onSnapshot, doc, getDoc } from "firebase/firestore";
+import { db } from "@/firebaseConfig";
 
 const SearchingWorkerView = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
     const requestId = location.state?.requestId;
-    const category = location.state?.category;
-    const description = location.state?.description;
-    const address = location.state?.address;
     const [searchStatus, setSearchStatus] = useState('');
     const [worker, setWorker] = useState(null);
     const [progress, setProgress] = useState(0);
 
-    const searchWorker = async () => {
-        try {
-            setSearchStatus('searching');
-            const interval = setInterval(() => {
-                setProgress((prev) => {
-                    if (prev >= 90) return prev;
-                    return prev + 10;
-                })
-            }, 100);
-
-            const result = await findWorker(category);
-
-            if (!result.success || result.workers.length === 0) {
-                setSearchStatus('not-found');
-                return;
-            }
-
-            for (const worker of result.workers) {
-                await sendRequestNotification(
-                    `+57${worker.phone}`,
-                    category,
-                    description,
-                    address,
-                );
-            }
-
-            setTimeout(() => {
-                clearInterval(interval);
-                setProgress(100);
-                setWorker(result.workers[0]);
-                setSearchStatus('found');
-            }, 3000);
-        } catch (error) {
-            console.log("Error al buscar worker:", error);
-            setSearchStatus('error');
-        }
-    }
-
     useEffect(() => {
-        searchWorker();
-    }, []);
+        const requestRef = doc(db, "requests", requestId);
+        const unsubscribe = onSnapshot(requestRef, async (snapshot) => {
+            const data = snapshot.data();
+            console.log(data.status);
+
+            if (data.status == "found") {
+                const workerRef = doc(db, "users", data.workerId);
+                const workerSnapshot = await getDoc(workerRef);
+
+                setWorker({
+                    id: workerSnapshot.id,
+                    ...workerSnapshot.data(),
+                });
+                setSearchStatus("found");
+
+            } else if (data.status == "not-found") {
+                setSearchStatus("not-found");
+            } else {
+                setSearchStatus("searching");
+            }
+        });
+        return () => unsubscribe();
+    }, [requestId]);
 
     const handleCancel = async () => {
         const result = await cancelRequest(requestId);

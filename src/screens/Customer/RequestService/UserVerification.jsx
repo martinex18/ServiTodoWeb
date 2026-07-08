@@ -60,7 +60,7 @@ const UserVerification = ({ phone, form, onBack }) => {
                 setError(requestResult.message);
                 return;
             } else {
-                setRequestId(requestResult.id);
+                setRequestId(requestResult.requestId);
                 setShowSuccess(true);
             }
         } catch (error) {
@@ -124,7 +124,7 @@ const UserVerification = ({ phone, form, onBack }) => {
                     setShowSuccess(false);
                     navigate('/searching-worker', {
                         state: {
-                            requestId: requestId,
+                            requestId,
                             category: form.category,
                         },
                     });
