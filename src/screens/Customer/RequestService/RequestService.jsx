@@ -16,7 +16,7 @@ const RequestService = () => {
     const navigate = useNavigate();
     const [error, setError] = useState('');
     const [step, setStep] = useState(1);
-    const [form, setForm] = useState({ category: '', service: '', date: '', address: '', notes: '', name: '', phone: '' });
+    const [form, setForm] = useState({ category: '', date: '', address: '', notes: '', name: '', phone: '' });
     const [loading, setLoading] = useState(false);
 
     const sortedCategories = [...categories].sort((a, b) => a.name.localeCompare(b.name, "es"));
@@ -25,10 +25,10 @@ const RequestService = () => {
         try {
             setLoading(true);
             setError('');
-            
+
             if (loading) return;
 
-            if (!form.category || !form.service || !form.date || !form.address || !form.name || !form.phone) {
+            if (!form.category || !form.date || !form.address || !form.name || !form.phone) {
                 setError("Completa todos los campos para continuar");
                 return;
             }
@@ -103,59 +103,53 @@ const RequestService = () => {
                                     <form className="px-6 py-6 space-y-5">
                                         <div>
                                             <label className={labelClass}>¿Que servicio necesitas?</label>
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                <div className="relative">
-                                                    <Tag size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                                    <Autocomplete
-                                                        options={sortedCategories}
-                                                        groupBy={(option) => option.name[0].toUpperCase()}
-                                                        getOptionLabel={(option) => option.name}
-                                                        value={
-                                                            sortedCategories.find((c) => c.id === form.category) || null
-                                                        }
-                                                        onChange={(_, value) =>
-                                                            setForm({
-                                                                ...form,
-                                                                category: value?.id || "",
-                                                            })
-                                                        }
-                                                        sx={{
-                                                            "& .MuiOutlinedInput-root": {
-                                                                paddingLeft: "32px",
-                                                                minHeight: "50px",
-                                                                borderRadius: "6px",
+                                            <div className="relative">
+                                                <Tag size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                                <Autocomplete
+                                                    options={sortedCategories}
+                                                    groupBy={(option) => option.name[0].toUpperCase()}
+                                                    getOptionLabel={(option) => option.name}
+                                                    value={
+                                                        sortedCategories.find((c) => c.id === form.category) || null
+                                                    }
+                                                    onChange={(_, value) =>
+                                                        setForm({
+                                                            ...form,
+                                                            category: value?.id || "",
+                                                        })
+                                                    }
+                                                    sx={{
+                                                        "& .MuiOutlinedInput-root": {
+                                                            paddingLeft: "32px",
+                                                            minHeight: "50px",
+                                                            borderRadius: "6px",
 
-                                                                "& fieldset": {
-                                                                    borderColor: "#e5e7eb",
-                                                                },
-
-                                                                "&:hover fieldset": {
-                                                                    borderColor: "#e5e7eb",
-                                                                },
-
-                                                                "&.Mui-focused fieldset": {
-                                                                    borderColor: "border-primary/20",
-                                                                    borderWidth: "2px",
-                                                                },
+                                                            "& fieldset": {
+                                                                borderColor: "#e5e7eb",
                                                             },
 
-                                                            "& .MuiInputBase-input": {
-                                                                fontSize: "0.875rem",
-                                                                color: "#1f2937",
+                                                            "&:hover fieldset": {
+                                                                borderColor: "#e5e7eb",
                                                             },
-                                                        }}
-                                                        renderInput={(params) => (
-                                                            <TextField
-                                                                {...params}
-                                                                placeholder="Selecciona una categoría"
-                                                            />
-                                                        )}
-                                                    />
-                                                </div>
-                                                <div className="relative">
-                                                    <ToolCase size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                                    <input className={`${inputClass} text-base py-4`} placeholder="Ej. Necesito un plomero para una fuga" value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })} />
-                                                </div>
+
+                                                            "&.Mui-focused fieldset": {
+                                                                borderColor: "border-primary/20",
+                                                                borderWidth: "2px",
+                                                            },
+                                                        },
+
+                                                        "& .MuiInputBase-input": {
+                                                            fontSize: "0.875rem",
+                                                            color: "#1f2937",
+                                                        },
+                                                    }}
+                                                    renderInput={(params) => (
+                                                        <TextField
+                                                            {...params}
+                                                            placeholder="Selecciona una categoría"
+                                                        />
+                                                    )}
+                                                />
                                             </div>
                                         </div>
 

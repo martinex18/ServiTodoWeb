@@ -16,6 +16,7 @@ import RequestService from "@/screens/Customer/RequestService/RequestService";
 import ScrollTop from "@/components/scrollTop";
 import SearchingWorkerView from "@/screens/Customer/SearchingWorker/SearchingWorkerView";
 import NotFound from "@/screens/NotFound/NotFound";
+import ChangePassword from "@/screens/ChangePassword/ChangePassword";
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -63,6 +64,12 @@ const AnimatedRoutes = () => {
         <Route path="/searching-worker" element={
           <AuthRedirectRoute>
             <SearchingWorkerView />
+          </AuthRedirectRoute>
+        } />
+
+        <Route path="/forgot-password" element={
+          <AuthRedirectRoute>
+            <ChangePassword />
           </AuthRedirectRoute>
         } />
 
