@@ -6,8 +6,6 @@ import Header from "../../../components/header/header";
 import AddServicesModal from "../../../components/modal/addServicesModal";
 import { getWorkerServices } from "@/services/worker/getWorkerServices";
 import { DAYS } from "@/services/utils/days";
-import RequestPermissionModal from "@/components/modal/requestPermissionModal";
-import { requestNotification } from "@/services/notifications/requestNotification";
 import CompleteProfileModal from "@/components/modal/CompleteProfileModal";
 import WarningModal from "@/components/modal/WarningModal";
 import ActionButton from "@/components/buttons/ActionButton";
@@ -20,7 +18,6 @@ const HomeWorkerView = () => {
   const [loadingServices, setLoadingServices] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
-  const [openPermissionModal, setOpenPermissionModal] = useState(false);
   const [openCompleteProfileModal, setOpenCompleteProfileModal] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
 
@@ -56,34 +53,6 @@ const HomeWorkerView = () => {
     if (response.success) setServices(response.services);
     setLoadingServices(false);
   }
-
-  /*useEffect(() => {
-    const int = async () => {
-      fetchServices();
-
-      if (Notification.permission === 'granted') {
-        await requestNotification(user.uid);
-        return;
-      }
-
-      if (Notification.permission === 'denied') return;
-      if (sessionStorage.getItem('notificationDismissed')) return;
-
-      setOpenPermissionModal(true);
-    }
-
-    int();
-  }, [user.uid]); 
-
-  const handleAccept = async () => {
-    setOpenPermissionModal(false);
-    await requestNotification(user.uid);
-  }
-
-  const handleDismiss = () => {
-    sessionStorage.setItem('notification_permission_denied', 'true');
-    setOpenPermissionModal(false);
-  } */
 
   const handleLogout = async () => {
     await logout();
@@ -128,10 +97,10 @@ const HomeWorkerView = () => {
               <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100">
                 <div className="flex items-center gap-2">
                   <Briefcase size={18} className="text-primary" />
-                  <h2 className="text-base font-semibold text-gray-900">Mis servicios publicados</h2>
+                  <h2 className="text-base font-semibold text-gray-900">Mis solicitudes</h2>
                 </div>
                 <span className="text-xs font-medium text-primary bg-primary-light px-2.5 py-1 rounded-full">
-                  {services.length} {services.length === 1 ? 'servicio' : 'servicios'}
+                  {services.length} {services.length === 1 ? 'solicitud' : 'solicitudes'}
                 </span>
               </div>
 
@@ -145,8 +114,7 @@ const HomeWorkerView = () => {
                     <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center mb-3">
                       <Briefcase size={24} className="text-gray-300" />
                     </div>
-                    <p className="text-sm font-medium text-gray-500">No tienes servicios publicados</p>
-                    <p className="text-xs text-gray-400 mt-1">Agregar tu primer servicio para empezar</p>
+                    <p className="text-sm font-medium text-gray-500">No tienes solicitudes</p>
                   </div>
                 ) : (
                   services.map((service) => (
@@ -184,7 +152,7 @@ const HomeWorkerView = () => {
               {services.length > 0 && (
                 <div className="px-4 pb-4">
                   <button className="w-full py-2.5 text-sm font-medium text-primary border border-primary/20 bg-primary-light hover:bg-primary hover:text-white rounded-xl transition-all">
-                    Ver todos mis servicios
+                    Ver todas mis solicitudes
                   </button>
                 </div>
               )}
@@ -211,15 +179,11 @@ const HomeWorkerView = () => {
                 <h3 className="text-sm font-semibold text-gray-900 mb-3">Resumen</h3>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Servicios publicados</span>
-                    <span className="text-sm font-semibold text-gray-900">{services.length}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-500">Solicitudes activas</span>
                     <span className="text-sm font-semibold text-gray-900">0</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Servicios completados</span>
+                    <span className="text-sm text-gray-500">Solicitudes completadas</span>
                     <span className="text-sm font-semibold text-gray-900">0</span>
                   </div>
                 </div>
