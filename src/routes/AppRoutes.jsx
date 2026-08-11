@@ -17,71 +17,62 @@ import ScrollTop from "@/components/scrollTop";
 import SearchingWorkerView from "@/screens/Customer/SearchingWorker/SearchingWorkerView";
 import NotFound from "@/screens/NotFound/NotFound";
 import ResetPassword from "@/screens/ResetPassword/ResetPassword";
+import PublicLayout from "@/layouts/PublicLayout";
 
 const AnimatedRoutes = () => {
   const location = useLocation();
   return (
     <AnimatePresence mode='wait'>
       <Routes location={location} key={location.pathname}>
-
-        {/* AuthRedirectRoutes */}
-        <Route path="/" element={
+        <Route element={
           <AuthRedirectRoute>
-            <Home />
+            <PublicLayout />
           </AuthRedirectRoute>
-        } />
+        }>
+          {/* AuthRedirectRoutes */}
+          <Route path="/" element={
+            <Home />
+          } />
+
+          {/*<Route path="/register-customer" element={
+              <RegisterCustomerView />
+          } /> */}
+
+          {/* <Route path="/role" element={
+              <RoleView />
+            } />
+          */}
+
+          <Route path="/request-service" element={
+            <RequestService />
+          } />
+
+          <Route path="/searching-worker" element={
+            <SearchingWorkerView />
+          } />
+
+          <Route path="/forgot-password" element={
+            <ResetPassword />
+          } />
+        </Route>
 
         <Route path="/login" element={
-          <AuthRedirectRoute>
-            <LoginView />
-          </AuthRedirectRoute>
+          <LoginView />
         } />
 
         <Route path="/register-worker" element={
-          <AuthRedirectRoute>
-            <RegisterWorkerView />
-          </AuthRedirectRoute>
-        } />
-
-        <Route path="/register-customer" element={
-          <AuthRedirectRoute>
-            <RegisterCustomerView />
-          </AuthRedirectRoute>
-        } />
-
-        <Route path="/role" element={
-          <AuthRedirectRoute>
-            <RoleView />
-          </AuthRedirectRoute>
-        } />
-
-        <Route path="/request-service" element={
-          <AuthRedirectRoute>
-            <RequestService />
-          </AuthRedirectRoute>
-        } />
-
-        <Route path="/searching-worker" element={
-          <AuthRedirectRoute>
-            <SearchingWorkerView />
-          </AuthRedirectRoute>
-        } />
-
-        <Route path="/forgot-password" element={
-          <AuthRedirectRoute>
-            <ResetPassword />
-          </AuthRedirectRoute>
+          <RegisterWorkerView />
         } />
 
         {/* Private Routes */}
-        <Route
+        {/* <Route
           path="/home-customer"
           element={
             <PrivateRoute>
               <HomeCustomerView />
             </PrivateRoute>
           }
-        />
+        /> */}
 
         <Route
           path="/home-worker"

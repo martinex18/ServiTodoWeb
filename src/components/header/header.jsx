@@ -5,7 +5,7 @@ const Header = ({
     links = [],
     backgroundColor = "bg-white/80 backdrop-blur-md",
     textColor = "text-gray-900",
-    rightContent,
+    rightContent = null,
 }) => {
     return (
         <header

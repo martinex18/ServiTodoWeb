@@ -8,20 +8,6 @@ const Home = () => {
     const navigate = useNavigate();
     return (
         <>
-            <Header
-                backgroundColor='bg-white/70 backdrop-blur-md border-b border-gray-100'
-                textColor='text-gray-600'
-                rightContent={
-                    <div className='flex items-center gap-3'>
-                        <button className="text-sm font-medium text-gray-600 hover:text-primary transition-colors cursor-pointer" onClick={() => navigate('/login')}>
-                            Iniciar sesión
-                        </button>
-                        <button className="px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary-dark transition-all shadow-sm hover:shadow-md cursor-pointer" onClick={() => navigate('/register-worker')}>
-                            Ofrece tus servicios
-                        </button>
-                    </div>
-                }
-            />
             <div className='min-h-screen bg-gray-50 pb-16 px-4 md:px-8 lg:px-12'>
                 <div className='max-w-7xl mx-auto'>
                     <div className='flex flex-col items-start gap-4 max-w-2xl'>
@@ -89,7 +75,6 @@ const Home = () => {
                     </div>
                 </div>
             </div>
-            <Footer />
         </>
     )
 }
