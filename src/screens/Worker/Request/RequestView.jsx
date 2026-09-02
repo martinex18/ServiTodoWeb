@@ -87,9 +87,9 @@ const RequestView = () => {
     return (
         <>
             <Header links={[
-                { name: "Inicio", to: "/home-customer" },
-                { name: "Mis solicitudes", to: "/" },
-                { name: "Perfil", to: "/" },
+                { name: "Inicio", to: "/home-worker" },
+                { name: "Mis solicitudes", to: "/requests" },
+                { name: "Perfil", to: "/profile" },
             ]}
                 backgroundColor="bg-primary"
                 textColor="text-white"
