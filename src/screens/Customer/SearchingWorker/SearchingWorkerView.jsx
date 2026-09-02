@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Lottie from "lottie-react";
 import searchingAnimation from "@/assets/animation/Searching.json";
 import { ChevronRight, Headset } from "lucide-react";
-import { cancelRequest } from "@/services/Request/cancelRequest";
+import { cancelRequest } from "@/services/request/cancelRequest";
 import WorkerFound from "@/components/cards/WorkerFound/WorkerFound";
 import WorkerNotFound from "@/components/cards/WorkerNotFound/WokerNotFound";
 import { onSnapshot, doc, getDoc } from "firebase/firestore";
@@ -103,7 +103,7 @@ const SearchingWorkerView = () => {
                         </div>
 
                         {/* Sugerencia para completar perfil */}
-                        <div className="w-full max-w-md flex items-center justify-between gap-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-4 cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                        {/* <div className="w-full max-w-md flex items-center justify-between gap-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-4 cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all duration-300">
                             <div className="flex items-center gap-3">
                                 <Avatar sx={{ width: 46, height: 46, bgcolor: '#5f8d92' }} />
                                 <div className="flex flex-col items-start text-left">
@@ -116,7 +116,7 @@ const SearchingWorkerView = () => {
                                 </div>
                             </div>
                             <ChevronRight size={18} className="text-primary shrink-0" />
-                        </div>
+                        </div> */}
 
                         <button className="text-sm text-gray-400 hover:text-red-500 transition-colors cursor-pointer" onClick={handleCancel}>Cancelar búsqueda</button>
                     </div>

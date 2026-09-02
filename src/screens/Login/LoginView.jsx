@@ -183,10 +183,6 @@ const LoginView = () => {
             {/* Móvil */}
             <div className="flex justify-center lg:hidden">
               <p className="text-sm text-gray-500">
-                <Link to="/register-customer" className="text-primary hover:text-primary-dark font-medium transition-colors">
-                  Cliente
-                </Link>
-                {" "}o{" "}
                 <Link to="/register-worker" className="text-primary hover:text-primary-dark font-medium transition-colors">
                   Trabajador
                 </Link>
@@ -195,12 +191,6 @@ const LoginView = () => {
 
             {/* Desktop */}
             <div className="hidden lg:flex items-center justify-center gap-4">
-              <Link to="/register-customer">
-                <button className="flex flex-col items-center justify-center bg-white border-2 border-primary text-primary font-semibold px-6 py-4 rounded-2xl hover:bg-primary hover:text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <User size={30} />
-                  <span className="text-sm mt-0.5">Cliente</span>
-                </button>
-              </Link>
               <Link to="/register-worker">
                 <button className="flex flex-col items-center justify-center bg-white border-2 border-primary text-primary font-semibold px-6 py-4 rounded-2xl hover:bg-primary hover:text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                   <Briefcase size={30} />

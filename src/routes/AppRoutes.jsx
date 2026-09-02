@@ -43,17 +43,17 @@ const AnimatedRoutes = () => {
           </AuthRedirectRoute>
         } />
 
-        <Route path="/register-customer" element={
+        {/*<Route path="/register-customer" element={
           <AuthRedirectRoute>
             <RegisterCustomerView />
           </AuthRedirectRoute>
-        } />
+        } /> */}
 
-        <Route path="/role" element={
+        {/*<Route path="/role" element={
           <AuthRedirectRoute>
             <RoleView />
           </AuthRedirectRoute>
-        } />
+        } /> */}
 
         <Route path="/request-service" element={
           <AuthRedirectRoute>
@@ -74,14 +74,14 @@ const AnimatedRoutes = () => {
         } />
 
         {/* Private Routes */}
-        <Route
+        {/*<Route
           path="/home-customer"
           element={
             <PrivateRoute>
               <HomeCustomerView />
             </PrivateRoute>
           }
-        />
+        /> */}
 
         <Route
           path="/home-worker"
